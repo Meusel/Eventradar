@@ -32,11 +32,17 @@ Key features include:
 🚀 Tech Stack (Python-based)
 Layer	Tools & Libraries
 Frontend (Mobile) -- 	Kivy or BeeWare for Python-native mobile apps
+
 Backend (API) --	Flask or Django REST Framework
+
 Database --	SQLite (easy start) → PostgreSQL (scalable option)
+
 Map & Location Services	-- geopy(distance calculation), folium (map visualization), OpenStreetMap APIs
+
 Filtering & Categorization	-- Custom Python logic with pandas or direct SQL queries
+
 Privacy & Security	-- Django’s built-in authentication, cryptography library for encryption, GDPR-compliant consent flows
+
 ((Deployment	-- Simple hosting on Heroku/Render, or Dockerized Python app))
 
 🛠 Development Approach
