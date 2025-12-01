@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return send_from_directory("../public", "index.html")
+    return render_template("index.html")
 
 @app.route("/events", methods=["GET"])
 def get_events():
@@ -20,3 +20,4 @@ def health_check():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
