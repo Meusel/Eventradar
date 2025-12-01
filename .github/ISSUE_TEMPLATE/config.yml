@@ -1,0 +1,16 @@
+blank_issues_enabled: false
+contact_links: []
+
+issue_templates:
+  - name: 📝 New Task
+    description: Create a new task for weekly planning
+    title: "[TODO] "
+    labels: ["week-plan"]
+    assignees: ["Henrald"]
+    template: todo.md
+
+  - name: 🐞 Bug Report
+    description: Report a bug or unexpected behavior
+    title: "[BUG] "
+    labels: ["bug"]
+    template: bug_report.md
