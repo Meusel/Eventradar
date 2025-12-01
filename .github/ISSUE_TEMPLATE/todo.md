@@ -1,4 +1,3 @@
-
 ---
 name: 📝 New To‑Do
 about: Create a new task for weekly planning
