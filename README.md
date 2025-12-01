@@ -29,18 +29,58 @@ Key features include:
 
     Support mobility decisions through distance-based visualization
 
-🛠 Design Requirements & Principles
-DR1 – Event Discovery (Henri)
+🚀 Tech Stack (Python-based)
+Layer	Tools & Libraries
+Frontend (Mobile) -- 	Kivy or BeeWare for Python-native mobile apps
+Backend (API) --	Flask or Django REST Framework
+Database --	SQLite (easy start) → PostgreSQL (scalable option)
+Map & Location Services	-- geopy(distance calculation), folium (map visualization), OpenStreetMap APIs
+Filtering & Categorization	-- Custom Python logic with pandas or direct SQL queries
+Privacy & Security	-- Django’s built-in authentication, cryptography library for encryption, GDPR-compliant consent flows
+((Deployment	-- Simple hosting on Heroku/Render, or Dockerized Python app))
 
-    Principles:
+🛠 Development Approach
 
-        Time-window focus: default view shows events for the next 7 days
+    Conceptualization
 
-        Chronological sorting by date and time
+        Define design theory and project structure plan
 
-        Progressive information disclosure: week → day list → event card → detail view
+        Identify core modules (event discovery, filtering, privacy, maps)
 
-    Heuristics: Visibility of system status, recognition over recall, flexibility & efficiency
+    Implementation
 
-    Theory: Cognitive Load Theory, Gestalt principles (prägnanz), Boroditsky’s mental time models
+        Build backend API in Flask/Django
 
+        Integrate SQLite for local testing, PostgreSQL for production
+
+        Develop mobile UI with Kivy/BeeWare
+
+        Add map visualization and distance filters
+
+    Privacy & GDPR Compliance
+
+        Implement Privacy-by-Design principles
+
+        Default settings: minimal data collection, opt-in consent
+
+        Local storage where possible, encrypted server storage
+
+    Testing & Iteration
+
+        Usability testing with students
+
+        Daily event updates from organizers
+
+        Error prevention and clear feedback messages
+
+📚 Theoretical Foundations
+
+    Cognitive Load Theory (Sweller, 1988) – reducing extraneous load
+
+    Gestalt Principles – visual clarity and orientation
+
+    Affordance Theory (Gibson, 1979) – intuitive interaction with environment
+
+    Information Foraging Theory (Pirolli & Card, 1999) – cost cues like distance guide decisions
+
+    Privacy-by-Design (GDPR Art. 25) – embedding privacy into architecture
