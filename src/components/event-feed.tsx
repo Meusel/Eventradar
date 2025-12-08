@@ -6,6 +6,13 @@ import EventCard from "./event-card";
 import { Button } from "./ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Filter } from "lucide-react";
 
 type EventFeedProps = {
   events: Event[];
@@ -47,34 +54,46 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
         ))}
       </div>
 
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <Label htmlFor="price-slider">Preis</Label>
-            <span className="text-sm font-medium">{price > 0 ? `bis zu ${price} €` : 'Kostenlos'}</span>
-          </div>
-          <Slider
-            id="price-slider"
-            max={50}
-            step={5}
-            value={[price]}
-            onValueChange={(value) => setPrice(value[0])}
-          />
-        </div>
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <Label htmlFor="duration-slider">Dauer</Label>
-            <span className="text-sm font-medium">bis zu {duration} h</span>
-          </div>
-          <Slider
-            id="duration-slider"
-            max={12}
-            step={1}
-            value={[duration]}
-            onValueChange={(value) => setDuration(value[0])}
-          />
-        </div>
-      </div>
+      <Accordion type="single" collapsible className="w-full mb-8">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Weitere Filter
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 pt-4">
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <Label htmlFor="price-slider">Preis</Label>
+                  <span className="text-sm font-medium">{price > 0 ? `bis zu ${price} €` : 'Kostenlos'}</span>
+                </div>
+                <Slider
+                  id="price-slider"
+                  max={50}
+                  step={5}
+                  value={[price]}
+                  onValueChange={(value) => setPrice(value[0])}
+                />
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <Label htmlFor="duration-slider">Dauer</Label>
+                  <span className="text-sm font-medium">bis zu {duration} h</span>
+                </div>
+                <Slider
+                  id="duration-slider"
+                  max={12}
+                  step={1}
+                  value={[duration]}
+                  onValueChange={(value) => setDuration(value[0])}
+                />
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {filteredEvents.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
