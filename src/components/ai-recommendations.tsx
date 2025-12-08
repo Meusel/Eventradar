@@ -9,9 +9,9 @@ import {
 import { Button } from "./ui/button";
 
 const recommendations = [
-  { title: "Secret Warehouse Party", icon: PartyPopper },
+  { title: "Geheime Lagerhaus-Party", icon: PartyPopper },
   { title: "Jazz Jam Session", icon: Music },
-  { title: "Live Pottery Demo", icon: Palette },
+  { title: "Live-Töpferei-Demo", icon: Palette },
 ];
 
 export default function AiRecommendations() {
@@ -20,10 +20,10 @@ export default function AiRecommendations() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 font-headline">
           <Sparkles className="h-6 w-6 text-accent" />
-          For You
+          Für Dich
         </CardTitle>
         <CardDescription>
-          AI-powered suggestions based on your interests.
+          KI-basierte Vorschläge basierend auf deinen Interessen.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -41,7 +41,7 @@ export default function AiRecommendations() {
           ))}
         </ul>
         <Button variant="accent" size="sm" className="w-full">
-          Refine my interests
+          Interessen anpassen
         </Button>
       </CardContent>
     </Card>

@@ -18,8 +18,8 @@ export default function SocialShareButtons() {
     if (currentUrl) {
       navigator.clipboard.writeText(currentUrl);
       toast({
-        title: "Link Copied!",
-        description: "The event URL has been copied to your clipboard.",
+        title: "Link kopiert!",
+        description: "Die Event-URL wurde in deine Zwischenablage kopiert.",
       });
     }
   };
@@ -27,17 +27,17 @@ export default function SocialShareButtons() {
   return (
     <div className="text-center">
       <p className="mb-2 text-sm font-semibold text-muted-foreground">
-        Share with friends
+        Mit Freunden teilen
       </p>
       <div className="flex justify-center gap-2">
         <Button variant="outline" size="icon" asChild>
           <a
             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
               currentUrl
-            )}&text=${encodeURIComponent("Check out this event!")}`}
+            )}&text=${encodeURIComponent("Schau dir dieses Event an!")}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share on Twitter"
+            aria-label="Auf Twitter teilen"
           >
             <Twitter className="h-5 w-5" />
           </a>
@@ -49,7 +49,7 @@ export default function SocialShareButtons() {
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share on Facebook"
+            aria-label="Auf Facebook teilen"
           >
             <Facebook className="h-5 w-5" />
           </a>
@@ -58,7 +58,7 @@ export default function SocialShareButtons() {
           variant="outline"
           size="icon"
           onClick={copyToClipboard}
-          aria-label="Copy link"
+          aria-label="Link kopieren"
         >
           <Share2 className="h-5 w-5" />
         </Button>

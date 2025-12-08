@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const allEvents = getEvents();
-  const categories = ["All", ...new Set(allEvents.map((event) => event.category))];
+  const categories = ["Alle", ...new Set(allEvents.map((event) => event.category))];
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(allEvents);
 
@@ -45,19 +45,19 @@ export default function Home() {
         <div className="container mx-auto max-w-7xl px-4 py-8">
           <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h1 className="text-3xl font-bold font-headline tracking-tight md:text-4xl">
-              Upcoming Events in <span className="text-primary">Halle</span>
+              Anstehende Events in <span className="text-primary">Halle</span>
             </h1>
             <div className="lg:hidden">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline" className="w-full">
                     <Sparkles className="mr-2 h-4 w-4" />
-                    AI Recommendations
+                    KI-Empfehlungen
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="bottom">
                   <SheetHeader>
-                    <SheetTitle>AI Recommendations</SheetTitle>
+                    <SheetTitle>KI-Empfehlungen</SheetTitle>
                   </SheetHeader>
                   <div className="p-4">
                     <AiRecommendations />
@@ -70,7 +70,7 @@ export default function Home() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search for events..."
+              placeholder="Suche nach Events..."
               className="w-full rounded-full bg-muted pl-10 pr-4 py-6 text-lg"
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}

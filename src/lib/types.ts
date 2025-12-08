@@ -4,9 +4,11 @@ export type Event = {
   description: string;
   date: string;
   time: string;
-  category: "Music" | "Art" | "Party" | "Sports" | "Workshop";
+  category: "Musik" | "Kunst" | "Party" | "Sport" | "Workshop";
   location: string;
   imageUrl: string;
   imageHint: string;
   ticketUrl: string;
+  price: number;
+  duration: number; // in hours
 };
