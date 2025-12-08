@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { Event } from "@/lib/types";
 import EventCard from "./event-card";
 import { Button } from "./ui/button";
@@ -12,6 +12,10 @@ type EventFeedProps = {
 
 export default function EventFeed({ events, categories }: EventFeedProps) {
   const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    setActiveCategory("All");
+  }, [events]);
 
   const filteredEvents = useMemo(() => {
     if (activeCategory === "All") {
@@ -44,7 +48,7 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
       ) : (
         <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-muted/50 p-12 text-center">
             <p className="text-lg font-medium text-muted-foreground">No events found</p>
-            <p className="text-sm text-muted-foreground/80">Try selecting a different category.</p>
+            <p className="text-sm text-muted-foreground/80">Try selecting a different category or clearing your search.</p>
         </div>
       )}
     </div>
