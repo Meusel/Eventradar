@@ -23,10 +23,17 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
   const [activeCategory, setActiveCategory] = useState("Alle");
   const [price, setPrice] = useState(50);
   const [duration, setDuration] = useState(12);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setActiveCategory("Alle");
-  }, [events]);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      setActiveCategory("Alle");
+    }
+  }, [events, isClient]);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -38,20 +45,26 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
     return filtered;
   }, [events, activeCategory, price, duration]);
 
+  if (!isClient) {
+    return null; // or a loading skeleton
+  }
+
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center gap-2">
-        {categories.map((category) => (
-          <Button
-            key={category}
-            variant={activeCategory === category ? "default" : "outline"}
-            size="sm"
-            onClick={() => setActiveCategory(category)}
-            className="rounded-full"
-          >
-            {category}
-          </Button>
-        ))}
+      <div className="mb-6">
+        <div className="flex space-x-2 overflow-x-auto pb-2">
+            {categories.map((category) => (
+            <Button
+                key={category}
+                variant={activeCategory === category ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveCategory(category)}
+                className="rounded-full flex-shrink-0"
+            >
+                {category}
+            </Button>
+            ))}
+        </div>
       </div>
 
       <Accordion type="single" collapsible className="w-full mb-8">
@@ -63,7 +76,7 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 pt-4">
+            <div className="grid grid-cols-1 gap-6 pt-4">
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <Label htmlFor="price-slider">Preis</Label>

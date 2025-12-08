@@ -37,7 +37,7 @@ export default function EventPage({ params }: EventPageProps) {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
-      <main className="flex-1 bg-background">
+      <main className="flex-1 bg-background pb-16">
         <div className="container mx-auto max-w-4xl px-4 py-8">
           <Button asChild variant="ghost" className="mb-6">
             <Link href="/">

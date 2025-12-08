@@ -1,4 +1,5 @@
-import { Sparkles, PartyPopper, Music, Palette } from "lucide-react";
+"use client";
+import { Sparkles, PartyPopper, Music, Palette, Loader } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -7,16 +8,35 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
-
-const recommendations = [
-  { title: "Geheime Lagerhaus-Party", icon: PartyPopper },
-  { title: "Jazz Jam Session", icon: Music },
-  { title: "Live-Töpferei-Demo", icon: Palette },
-];
+import { Textarea } from "./ui/textarea";
+import { useState } from "react";
+import { getEventRecommendations } from "@/ai/ai-event-recommendations";
 
 export default function AiRecommendations() {
+  const [interests, setInterests] = useState("");
+  const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGetRecommendations = async () => {
+    if (!interests) return;
+    setIsLoading(true);
+    setRecommendations([]);
+    try {
+      const result = await getEventRecommendations({
+        location: "Halle (Saale)",
+        interests: interests,
+      });
+      setRecommendations(result.recommendations);
+    } catch (error) {
+      console.error("Failed to get recommendations:", error);
+      // Optional: Handle error in UI
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Card className="bg-gradient-to-br from-accent/20 to-transparent shadow-lg">
+    <Card className="w-full bg-gradient-to-br from-accent/20 to-transparent shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 font-headline">
           <Sparkles className="h-6 w-6 text-accent" />
@@ -27,22 +47,38 @@ export default function AiRecommendations() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ul className="space-y-3">
-          {recommendations.map((rec, index) => (
-            <li
-              key={index}
-              className="flex items-center gap-3 text-sm font-medium"
-            >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
-                <rec.icon className="h-5 w-5" />
-              </div>
-              <span className="flex-1">{rec.title}</span>
-            </li>
-          ))}
-        </ul>
-        <Button variant="accent" size="sm" className="w-full">
-          Interessen anpassen
+        <Textarea
+          placeholder="Gib deine Interessen ein, z.B. 'Techno, Kunstausstellungen, Live-Musik'..."
+          value={interests}
+          onChange={(e) => setInterests(e.target.value)}
+        />
+        <Button
+          variant="accent"
+          className="w-full"
+          onClick={handleGetRecommendations}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loader className="h-5 w-5 animate-spin" />
+          ) : (
+            "Empfehlungen erhalten"
+          )}
         </Button>
+        {recommendations.length > 0 && (
+          <ul className="space-y-3 pt-4">
+            {recommendations.map((rec, index) => (
+              <li
+                key={index}
+                className="flex items-center gap-3 text-sm font-medium"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                  <PartyPopper className="h-5 w-5" />
+                </div>
+                <span className="flex-1">{rec}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </CardContent>
     </Card>
   );
