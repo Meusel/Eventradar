@@ -205,3 +205,14 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Firebase / Google Cloud
+.firebase/
+firebasedebug.log
+firebase-debug.log
+ui-debug.log
+
+# Node (falls du Functions oder Web nutzt)
+node_modules/
+.env
+.env.local
