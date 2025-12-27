@@ -89,7 +89,7 @@ const eventsData: Event[] = [
     category: "Musik",
     location: "Café Nöö, Große Klausstraße 11, 06108 Halle",
     imageUrl: "https://picsum.photos/seed/guitar/600/400",
-    imageHint: "open mic",
+    imageHint: "akustische gitarre",
     ticketUrl: "#",
     price: 0,
     duration: 3,
