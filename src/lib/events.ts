@@ -91,7 +91,7 @@ const eventsData: Event[] = [
     imageUrl: "https://picsum.photos/seed/6/600/400",
     imageHint: "open mic",
     ticketUrl: "#",
-    price: 0,
+    price: 5,
     duration: 3,
   },
 ];

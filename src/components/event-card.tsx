@@ -27,6 +27,7 @@ export default function EventCard({ event }: EventCardProps) {
               alt={event.title}
               data-ai-hint={event.imageHint}
               fill
+              sizes="100vw"
               className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
             />
             <Badge
