@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import CookieConsent from "@/components/cookie-consent";
 
 export const metadata: Metadata = {
   title: "Eventradar",
   description: "Events in Halle (Saale) für junge Leute und Studierende.",
 };
 
-export default function RootLayout({
+export default function RootLayout({ 
   children,
-}: Readonly<{
+}: Readonly<{ 
   children: React.ReactNode;
 }>) {
   return (
@@ -23,6 +24,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
+        <CookieConsent />
         {children}
         <Toaster />
       </body>
