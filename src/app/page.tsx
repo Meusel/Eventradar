@@ -7,7 +7,7 @@ import AiRecommendations from "@/components/ai-recommendations";
 import { getEvents } from "@/lib/events";
 import type { Event } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Compass, Home as HomeIcon, Search, Sparkles } from "lucide-react";
+import { Calendar, Compass, Home as HomeIcon, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
@@ -81,6 +81,8 @@ export default function HomePage() {
         );
       case "discover":
          return <div className="text-center text-muted-foreground mt-8">Entdecken-Funktion kommt bald!</div>;
+      case "calendar":
+        return <div className="text-center text-muted-foreground mt-8">Kalender-Funktion kommt bald!</div>;
       default:
         return <EventFeed events={filteredEvents} categories={categories} />;
     }
@@ -111,6 +113,10 @@ export default function HomePage() {
             <Button variant="ghost" onClick={() => setActiveView('discover')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'discover' ? 'text-primary' : ''}`}>
                 <Compass className="h-6 w-6"/>
                 <span className="text-xs">Entdecken</span>
+            </Button>
+            <Button variant="ghost" onClick={() => setActiveView('calendar')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'calendar' ? 'text-primary' : ''}`}>
+                <Calendar className="h-6 w-6"/>
+                <span className="text-xs">Mein Kalender</span>
             </Button>
         </nav>
       </footer>
