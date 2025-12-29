@@ -10,6 +10,7 @@ import type { Event } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Compass, Home as HomeIcon, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'next/navigation';
 
 const EventMap = dynamic(() => import('@/components/event-map'), {
   ssr: false,
@@ -19,6 +20,8 @@ export default function App() {
   // Use state for events and categories to make them dynamic
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+  const eventId = searchParams.get('eventId');
   
   // Fetch events on component mount and set up a polling mechanism
   useEffect(() => {
@@ -38,6 +41,12 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [activeView, setActiveView] = useState('home');
+
+  useEffect(() => {
+    if(eventId) {
+        setActiveView('discover');
+    }
+  }, [eventId]);
 
   // Update filteredEvents whenever allEvents changes
   useEffect(() => {
@@ -126,7 +135,7 @@ export default function App() {
               </h1>
             </div>
             {/* The grid layout is removed, EventMap now takes the full width */}
-            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} />
+            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} selectedEventId={eventId} />
           </>
         );
       default:
