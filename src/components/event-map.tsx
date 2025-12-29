@@ -1,43 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Event } from '@/lib/types';
-import { createCustomIcon, getCategoryColor } from '@/lib/map-utils';
-import { getEvents } from "@/lib/events";
+import { createCustomIcon } from '@/lib/map-utils';
+import { getCategoryColor } from '@/lib/category-colors';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '@/hooks/use-user-location';
 import L from 'leaflet';
 import { LocateFixed } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface EventMapProps {
   events: Event[];
   categories: string[];
   onFilterChange: (category: string) => void;
 }
-
-const Legend = () => {
-  const allEvents = getEvents();
-  const categories = [...new Set(allEvents.map((event) => event.category))];
-
-  return (
-    <div className="legend bg-white p-2 rounded-md shadow-lg"> 
-      <h4 className="font-bold mb-2">Legende</h4>
-      <ul>
-        {categories.map((category) => (
-          <li key={category} className="flex items-center mb-1">
-            <span
-              className="w-4 h-4 inline-block mr-2 rounded-full"
-              style={{ backgroundColor: getCategoryColor(category) }}
-            ></span>
-            {category}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
 
 // Function to calculate distance between two points using Haversine formula
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -62,10 +41,10 @@ const RecenterButton = ({ location }: { location: { latitude: number, longitude:
     return location ? <Button onClick={recenter} className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] rounded-full" size="icon"><LocateFixed className="w-5 h-5"/></Button> : null;
 };
 
-
 const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange }) => {
   const [activeCategory, setActiveCategory] = useState('Alle');
   const { location, error } = useUserLocation();
+  const router = useRouter();
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
@@ -82,21 +61,35 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange 
       iconAnchor: [16, 16],
   });
 
+  const handleMoreInfoClick = (eventId: string) => {
+    router.push(`/events/${eventId}`);
+  };
+
   return (
     <div className="relative">
        <div className="mb-4">
         <div className="flex space-x-2 overflow-x-auto pb-2">
-            {categories.map((category) => (
-            <Button
-                key={category}
-                variant={activeCategory === category ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => handleCategoryChange(category)}
-                className="rounded-full flex-shrink-0"
-            >
-                {category}
-            </Button>
-            ))}
+            {categories.map((category) => {
+                const color = getCategoryColor(category);
+                const isActive = activeCategory === category;
+                return (
+                    <Button
+                        key={category}
+                        variant={isActive ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => handleCategoryChange(category)}
+                        className="rounded-full flex-shrink-0"
+                        style={category !== 'Alle' ? {
+                            backgroundColor: isActive ? color : 'white',
+                            color: isActive ? 'white' : color,
+                            borderColor: color,
+                            borderWidth: '1px'
+                        } : {}}
+                    >
+                        {category}
+                    </Button>
+                )
+            })}
         </div>
       </div>
       <MapContainer center={[51.4828, 11.9697]} zoom={13} scrollWheelZoom={false} className="h-[500px] w-full rounded-lg"> 
@@ -112,20 +105,27 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange 
         {events.map(event => {
           const distance = location ? calculateDistance(location.latitude, location.longitude, event.latitude, event.longitude).toFixed(2) : null;
           return (
-            <Marker key={event.id} position={[event.latitude, event.longitude]} icon={createCustomIcon(getCategoryColor(event.category))}>
+            <Marker 
+                key={event.id} 
+                position={[event.latitude, event.longitude]} 
+                icon={createCustomIcon(getCategoryColor(event.category))}
+            >
                 <Popup>
-                <b>{event.title}</b><br />
-                {event.location}
-                {distance && <><br /><i>{distance} km entfernt</i></>}
+                    <b>{event.title}</b><br />
+                    {event.location}
+                    {distance && <><br /><i>{distance} km entfernt</i></>}
+                    <br />
+                    {event.price > 0 ? `${event.price} €` : 'Kostenlos'}
+                    <br />
+                    <Button onClick={() => handleMoreInfoClick(event.id)} className="mt-2" size="sm">
+                        Mehr Infos
+                    </Button>
                 </Popup>
             </Marker>
           )
         })}
         <RecenterButton location={location}/>
       </MapContainer>
-      <div className="absolute top-2 right-2 z-[1000]">
-        <Legend />
-      </div>
     </div>
   );
 };

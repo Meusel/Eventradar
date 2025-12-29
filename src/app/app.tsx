@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/header';
 import EventFeed from '@/components/event-feed';
@@ -16,11 +16,33 @@ const EventMap = dynamic(() => import('@/components/event-map'), {
 });
 
 export default function App() {
-  const allEvents = getEvents();
-  const categories = ['Alle', ...new Set(allEvents.map((event) => event.category))];
+  // Use state for events and categories to make them dynamic
+  const [allEvents, setAllEvents] = useState<Event[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  
+  // Fetch events on component mount and set up a polling mechanism
+  useEffect(() => {
+    const fetchEvents = () => {
+      const events = getEvents();
+      setAllEvents(events);
+      const uniqueCategories = ['Alle', ...new Set(events.map((event) => event.category))];
+      setCategories(uniqueCategories);
+    };
+
+    fetchEvents(); // Initial fetch
+    const interval = setInterval(fetchEvents, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(allEvents);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [activeView, setActiveView] = useState('home');
+
+  // Update filteredEvents whenever allEvents changes
+  useEffect(() => {
+    setFilteredEvents(allEvents);
+  }, [allEvents]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -103,6 +125,7 @@ export default function App() {
                 Event-Karte von <span className="text-primary">Halle</span>
               </h1>
             </div>
+            {/* The grid layout is removed, EventMap now takes the full width */}
             <EventMap events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} />
           </>
         );
