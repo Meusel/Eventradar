@@ -19,6 +19,8 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 5,
     duration: 4,
+    priority: 2,
+    boxOffice: true,
   },
   {
     id: '2',
@@ -31,10 +33,12 @@ const eventsData: Event[] = [
     location:
       'Kunstmuseum Moritzburg, Friedemann-Bach-Platz 5, 06108 Halle (Saale)',
     imageUrl: '/images/moderne-kunst.jpg',
-    imageHint: 'kunstgalerie',
+    imageHint: 'abstrakte Kunstausstellung mit farbenfrohen Gemälden und Skulpturen',
     ticketUrl: '#',
     price: 0,
     duration: 3,
+    priority: 3,
+    boxOffice: false,
   },
   {
     id: '3',
@@ -46,10 +50,12 @@ const eventsData: Event[] = [
     category: 'Party',
     location: 'Station Endlos, Willy-Brandt-Straße 78, 06110 Halle (Saale)',
     imageUrl: '/images/techno-rave.jpg',
-    imageHint: 'dj party',
+    imageHint: 'dunkler Club mit Stroboskoplichtern und tanzenden Menschen',
     ticketUrl: '#',
     price: 10,
     duration: 6,
+    priority: 4,
+    boxOffice: true,
   },
   {
     id: '4',
@@ -65,6 +71,8 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 5,
     duration: 8,
+    priority: 2,
+    boxOffice: false,
   },
   {
     id: '5',
@@ -80,6 +88,8 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 0,
     duration: 3,
+    priority: 3,
+    boxOffice: false,
   },
   {
     id: '6',
@@ -95,7 +105,25 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 5,
     duration: 3,
+    priority: 2,
+    boxOffice: true,
   },
+  {
+    id: '7',
+    title: 'Jazzabend im Objekt 5',
+    description: 'Genieße einen entspannten Abend mit Live-Jazzmusik in der einzigartigen Atmosphäre des Objekt 5. Erlebe talentierte lokale Musiker und genieße dazu kühle Getränke.',
+    date: '2026-02-25',
+    time: '20:00',
+    category: 'Musik',
+    location: 'Objekt 5, Seebener Straße 5, 06114 Halle (Saale)',
+    imageUrl: '/images/jazz-abend.jpg',
+    imageHint: 'Jazz-Club-Atmosphäre mit Saxophon',
+    ticketUrl: '#',
+    price: 12,
+    duration: 3,
+    priority: 3,
+    boxOffice: true,
+  }
 ];
 
 export function getEvents(): Event[] {

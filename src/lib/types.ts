@@ -11,4 +11,6 @@ export type Event = {
   ticketUrl: string;
   price: number;
   duration: number; // in hours
+  priority?: number;
+  boxOffice?: boolean;
 };
