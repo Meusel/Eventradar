@@ -37,7 +37,7 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 0,
     duration: 3,
-    priority: 3,
+    priority: 2,
     boxOffice: false,
   },
   {
@@ -88,7 +88,7 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 0,
     duration: 3,
-    priority: 3,
+    priority: 2,
     boxOffice: false,
   },
   {
@@ -121,7 +121,7 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 12,
     duration: 3,
-    priority: 3,
+    priority: 2,
     boxOffice: true,
   }
 ];

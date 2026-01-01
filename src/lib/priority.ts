@@ -9,11 +9,6 @@ export const PRIORITY_MAP = {
     badge: "Empfohlen",
     icon: "⭐"
   },
-  3: {
-    label: "Highlight",
-    badge: "Highlight",
-    icon: "✨"
-  },
   4: {
     label: "Top-Event",
     badge: "Top-Event",

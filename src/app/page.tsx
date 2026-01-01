@@ -9,6 +9,7 @@ import type { Event } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Compass, Home as HomeIcon, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PriorityLegend from "@/components/priority-legend";
 
 export default function HomePage() {
   const allEvents = getEvents();
@@ -53,6 +54,7 @@ export default function HomePage() {
                   onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
+            <PriorityLegend />
             <EventFeed events={filteredEvents} categories={categories} />
           </>
         );
@@ -70,7 +72,7 @@ export default function HomePage() {
                   autoFocus
                 />
               </div>
-              {searchTerm ? <EventFeed events={filteredEvents} categories={categories} /> : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
+              {searchTerm ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
             </>
         );
       case "recommendations":
