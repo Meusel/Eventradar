@@ -12,7 +12,9 @@ import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const allEvents = getEvents();
-  const categories = ["Alle", ...new Set(allEvents.map((event) => event.category))];
+  const categories = ["Alle", ...new Set(allEvents.flatMap((event) => event.categories))];
+  const locations = ["Alle", ...new Set(allEvents.map((event) => event.district))];
+  const targetAudiences = ["Alle", ...new Set(allEvents.flatMap((event) => event.targetGroups))];
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(allEvents);
   const [activeView, setActiveView] = useState("home");
@@ -53,7 +55,7 @@ export default function HomePage() {
                   onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
-            <EventFeed events={filteredEvents} categories={categories} />
+            <EventFeed events={filteredEvents} categories={categories} locations={locations} targetAudiences={targetAudiences} />
           </>
         );
       case "search":
@@ -70,7 +72,7 @@ export default function HomePage() {
                   autoFocus
                 />
               </div>
-              {searchTerm ? <EventFeed events={filteredEvents} categories={categories} /> : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
+              {searchTerm ? <EventFeed events={filteredEvents} categories={categories} locations={locations} targetAudiences={targetAudiences} /> : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
             </>
         );
       case "recommendations":
@@ -82,7 +84,7 @@ export default function HomePage() {
       case "discover":
          return <div className="text-center text-muted-foreground mt-8">Entdecken-Funktion kommt bald!</div>;
       default:
-        return <EventFeed events={filteredEvents} categories={categories} />;
+        return <EventFeed events={filteredEvents} categories={categories} locations={locations} targetAudiences={targetAudiences} />;
     }
   }
 
