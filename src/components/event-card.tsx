@@ -22,39 +22,24 @@ export default function EventCard({ event }: { event: Event }) {
   const needsRegistration = event.extras.includes("Anmeldung erforderlich");
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
-        <Link href={`#`} className="block">
-            <div className="h-48 w-full overflow-hidden">
-                <img
-                src={event.imageUrl}
-                alt={event.imageHint}
-                className="h-full w-full object-cover"
-                />
-            </div>
-        </Link>
-      <div className="flex flex-1 flex-col p-4 md:p-6">
-        <div className="flex-1">
-          <div className="mb-2 flex flex-wrap gap-2">
-            {event.categories.map((category) => (
-              <Badge key={category} variant="secondary">
-                {category}
-              </Badge>
-            ))}
-          </div>
-          <Link href={`#`} className="block">
-            <h3 className="font-headline text-xl font-bold tracking-tight hover:text-primary">
-                {event.title}
-            </h3>
-          </Link>
-          <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              <span>{eventDate}, {eventTime} Uhr</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
-              <span>{event.venue}</span>
-            </div>
+    <Link href={`/events/${event.id}`} className="group block">
+      <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">
+        <CardHeader className="p-0">
+          <div className="relative h-48 w-full">
+            <Image
+              src={event.imageUrl}
+              alt={event.title}
+              data-ai-hint={event.imageHint}
+              fill
+              sizes="100vw"
+              className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+            />
+            <Badge
+              variant="secondary"
+              className="absolute top-3 right-3 bg-card/80 text-card-foreground backdrop-blur-sm"
+            >
+              {event.category}
+            </Badge>
           </div>
         </div>
         <div className="mt-6 flex items-center justify-between pt-4 border-t">
