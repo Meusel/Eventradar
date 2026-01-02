@@ -19,23 +19,15 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from "@/components/ui/alert-dialog";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger, 
-  DialogDescription,
-  DialogFooter
-} from "@/components/ui/dialog";
-import { Camera, X, Users, Lock, Pause, Trash2, ImageUp, Smile } from "lucide-react";
+import { X, Users, Lock, Trash2, Edit, Pause, ShieldCheck } from "lucide-react";
 
 export function UserProfile() {
   const [isPublic, setIsPublic] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("Ronny Müller");
   const [email, setEmail] = useState("ronny.mueller@example.com");
-  const [avatarUrl, setAvatarUrl] = useState("https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1974&auto=format&fit=crop");
+  const [avatarUrl, setAvatarUrl] = useState("https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop");
+  const [allowDataSharing, setAllowDataSharing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleEdit = () => setIsEditing(true);
@@ -51,10 +43,13 @@ export function UserProfile() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleAvatarClick = () => {
     fileInputRef.current?.click();
   };
-
+  
+  const handleRemoveAvatar = () => {
+    setAvatarUrl("");
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl mx-auto my-8 relative">
@@ -67,49 +62,22 @@ export function UserProfile() {
       </div>
 
       <div className="flex flex-col items-center space-y-4 mb-8">
-        <Dialog>
-          <DialogTrigger asChild>
-            <div className="relative cursor-pointer">
-              <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
-                <AvatarImage src={avatarUrl} alt="User avatar" />
-                <AvatarFallback className="text-4xl">{name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              {isEditing && (
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full transition-opacity duration-300 opacity-0 hover:opacity-100">
-                  <Camera className="text-white h-8 w-8" />
-                </div>
-              )}
-            </div>
-          </DialogTrigger>
-          {isEditing && (
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Profilbild bearbeiten</DialogTitle>
-                <DialogDescription>
-                  Wähle einen Avatar oder lade ein eigenes Bild hoch. Du kannst es jederzeit wieder ändern oder entfernen.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid grid-cols-2 gap-4 py-4">
-                <Button asChild variant="outline">
-                  <Link href="/avatar/create"><Smile className="mr-2 h-4 w-4"/> Avatar erstellen</Link>
-                </Button>
-                <Button variant="outline" onClick={handleUploadClick}>
-                  <ImageUp className="mr-2 h-4 w-4"/> Bild hochladen
-                </Button>
-                <input 
-                  type="file" 
-                  ref={fileInputRef} 
-                  onChange={handleFileChange} 
-                  className="hidden" 
-                  accept="image/*"
-                />
-              </div>
-              <DialogFooter>
-                <Button variant="ghost" className="text-red-500 hover:text-red-600" onClick={() => setAvatarUrl('')}>Profilbild entfernen</Button>
-              </DialogFooter>
-            </DialogContent>
-          )}
-        </Dialog>
+        <div className="relative cursor-pointer" onClick={handleAvatarClick}>
+          <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
+            <AvatarImage src={avatarUrl} alt="User avatar" className="object-cover"/>
+            <AvatarFallback className="text-4xl bg-purple-500 text-white">{name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full transition-opacity duration-300 opacity-0 hover:opacity-100">
+            <Edit className="text-white h-8 w-8" />
+          </div>
+        </div>
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileChange} 
+          className="hidden" 
+          accept="image/*"
+        />
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
           <p className="text-lg text-gray-600">{email}</p>
@@ -117,7 +85,6 @@ export function UserProfile() {
       </div>
 
       <div className="space-y-10">
-        {/* Personal Data Section */}
         <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-gray-800">Persönliche Daten</h3>
@@ -151,10 +118,18 @@ export function UserProfile() {
                 <p className="text-gray-900 text-lg pt-1">{email}</p>
               )}
             </div>
+             {isEditing && (
+                <div>
+                    <Label className="font-medium text-gray-700">Profilbild</Label>
+                    <div className="flex items-center gap-4 mt-2">
+                        <Button variant="outline" size="sm" onClick={handleAvatarClick}>Bild ändern</Button>
+                        <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onClick={handleRemoveAvatar}>Bild entfernen</Button>
+                    </div>
+                </div>
+            )}
           </div>
         </div>
 
-        {/* Visibility Section */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Sichtbarkeit</h3>
           <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border">
@@ -175,23 +150,45 @@ export function UserProfile() {
           </div>
         </div>
 
-        {/* Account Management Section */}
+        <div>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Datenschutz</h3>
+            <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border">
+                <div className="flex items-center gap-4">
+                    <ShieldCheck className="h-6 w-6 text-gray-600" />
+                    <div>
+                        <p className="font-semibold text-base text-gray-800">Personalisierte Inhalte</p>
+                        <p className="text-sm text-gray-500">
+                            Erlaube uns, deine Daten zu nutzen, um dir bessere Event-Vorschläge zu machen.
+                        </p>
+                    </div>
+                </div>
+                <Switch
+                    id="data-sharing"
+                    checked={allowDataSharing}
+                    onCheckedChange={setAllowDataSharing}
+                />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+                Weitere Informationen findest du in unserer <a href="/privacy" className="text-blue-600 hover:underline">Datenschutzerklärung</a>.
+            </p>
+        </div>
+
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Account verwalten</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 rounded-lg border">
-              <div>
+              <div className="flex-grow pr-4">
                 <p className="font-semibold text-base text-gray-800">Account pausieren</p>
                 <p className="text-sm text-gray-500">
                   Dein Profil wird verborgen und du erhältst keine Benachrichtigungen mehr.
                 </p>
               </div>
-              <Button variant="outline">
+              <Button variant="outline" size="sm">
                 <Pause className="mr-2 h-4 w-4"/> Pausieren
               </Button>
             </div>
             <div className="flex items-center justify-between p-4 rounded-lg border">
-              <div>
+              <div className="flex-grow pr-4">
                 <p className="font-semibold text-base text-gray-800">Account löschen</p>
                 <p className="text-sm text-gray-500">
                   Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden.
@@ -199,9 +196,9 @@ export function UserProfile() {
               </div>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="outline">
-                    <Trash2 className="mr-2 h-4 w-4"/> Löschen
-                  </Button>
+                    <Button variant="outline" size="sm">
+                        <Trash2 className="mr-2 h-4 w-4"/> Löschen
+                    </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
