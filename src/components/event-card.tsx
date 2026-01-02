@@ -14,9 +14,10 @@ import { Badge } from "@/components/ui/badge";
 
 type EventCardProps = {
   event: Event;
+  priority?: boolean;
 };
 
-export default function EventCard({ event }: EventCardProps) {
+export default function EventCard({ event, priority = false }: EventCardProps) {
   return (
     <Link href={`/events/${event.id}`} className="group block">
       <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">
@@ -27,8 +28,9 @@ export default function EventCard({ event }: EventCardProps) {
               alt={event.title}
               data-ai-hint={event.imageHint}
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+              priority={priority}
             />
             <Badge
               variant="secondary"
