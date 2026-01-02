@@ -1,21 +1,5 @@
 import L from 'leaflet';
-
-export const getCategoryColor = (category: string) => {
-  switch (category) {
-    case 'Musik':
-      return 'hsl(var(--chart-1))';
-    case 'Kunst':
-      return 'hsl(var(--chart-2))';
-    case 'Party':
-      return 'hsl(var(--chart-3))';
-    case 'Sport':
-      return 'hsl(var(--chart-4))';
-    case 'Workshop':
-      return 'hsl(var(--chart-5))';
-    default:
-      return 'hsl(var(--primary))';
-  }
-};
+import { getCategoryColor } from './category-colors';
 
 export const createCustomIcon = (color: string) => {
   const markerHtml = `

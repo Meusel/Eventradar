@@ -1,5 +1,6 @@
+'use client';
 import { getEventById } from "@/lib/events";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,6 +11,8 @@ import {
   Tags,
   BadgeEuro,
   Clock,
+  Map,
+  Navigation,
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -18,14 +21,10 @@ import { Badge } from "@/components/ui/badge";
 import SocialShareButtons from "@/components/social-share-buttons";
 import Header from "@/components/header";
 
-type EventPageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export default function EventPage({ params }: EventPageProps) {
-  const event = getEventById(params.id);
+export default function EventPage() {
+  const params = useParams();
+  const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const event = getEventById(eventId);
 
   if (!event) {
     notFound();
@@ -33,6 +32,16 @@ export default function EventPage({ params }: EventPageProps) {
 
   const heroImageUrl = "https://picsum.photos/seed/7/1200/400";
   const heroImageHint = "konzert publikum";
+
+ const handleGetDirections = () => {
+    if (!event) return;
+    const address = encodeURIComponent(event.location);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS
+      ? `maps://?q=${address}`
+      : `https://www.google.com/maps/dir/?api=1&destination=${address}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -95,6 +104,18 @@ export default function EventPage({ params }: EventPageProps) {
                     <p className="text-sm text-foreground/80">
                       {event.location}
                     </p>
+                    <div className="mt-2 flex flex-col space-y-2">
+                        <Button asChild size="sm" variant="outline">
+                            <Link href={`/?eventId=${event.id}`}>
+                                <Map className="mr-2 h-4 w-4"/>
+                                Auf Karte anzeigen
+                            </Link>
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={handleGetDirections}>
+                            <Navigation className="mr-2 h-4 w-4"/>
+                            Anfahrt
+                        </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
