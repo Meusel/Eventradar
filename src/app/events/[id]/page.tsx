@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { getEventById } from "@/lib/events";
 import { notFound, useParams } from "next/navigation";
 import Image from "next/image";

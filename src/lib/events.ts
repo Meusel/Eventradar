@@ -1,9 +1,11 @@
-import type { Event } from "./types";
+
+import { addDays, format, startOfToday } from 'date-fns';
+import type { Event } from './types';
 
 const eventsData: Event[] = [
   {
-    id: "1",
-    title: "Indie-Nacht in der Palette",
+    id: '1',
+    title: 'Indie-Nacht in der Palette',
     description:
       "Erlebe das Beste von lokalen und internationalen Indie-Bands in der legendären Palette. Eine Nacht mit großartiger Musik, günstigen Getränken und guter Stimmung erwartet dich. Verpasse nicht das nächste große Ding!",
     date: "2026-02-07",
@@ -30,7 +32,7 @@ const eventsData: Event[] = [
     soldOut: false,
   },
   {
-    id: "2",
+    id: '2',
     title: "Moderne Kunst Vernissage: 'Dimensionen'",
     description:
       "Besuche die Eröffnung von 'Dimensionen', einer neuen Ausstellung der aufstrebenden Künstlerin Klara Weiss. Entdecke abstrakte Formen und lebendige Farben, die die Wahrnehmung herausfordern. Freier Eintritt & kostenloser Sekt.",
@@ -58,8 +60,8 @@ const eventsData: Event[] = [
     soldOut: false,
   },
   {
-    id: "3",
-    title: "Studenten-Techno-Rave",
+    id: '3',
+    title: 'Studenten-Techno-Rave',
     description:
       "Entfessle deine Energie bei unserem riesigen Studenten-Techno-Rave. Top lokale DJs legen die ganze Nacht harte Tracks auf. Besondere Studentenrabatte an der Bar.",
     date: "2026-02-12",
@@ -86,8 +88,8 @@ const eventsData: Event[] = [
     soldOut: false,
   },
   {
-    id: "4",
-    title: "Hallesches Streetball-Turnier",
+    id: '4',
+    title: 'Hallesches Streetball-Turnier',
     description:
       "Hast du das Zeug dazu? Bilde ein Team und tritt beim jährlichen Halleschen Streetball-Turnier an. Preise, Musik und ein Food-Truck-Festival machen dies zu einem Muss für alle Basketball-Liebhaber.",
     date: "2026-02-14",
@@ -114,8 +116,8 @@ const eventsData: Event[] = [
     soldOut: false,
   },
   {
-    id: "5",
-    title: "Einführung in React: Programmier-Workshop",
+    id: '5',
+    title: 'Einführung in React: Programmier-Workshop',
     description:
       "Lerne die Grundlagen von React.js in diesem praxisnahen Workshop für Anfänger. Perfekt für Studierende, die moderne Webanwendungen erstellen möchten. Bitte eigenen Laptop mitbringen.",
     date: "2026-02-18",
@@ -142,8 +144,8 @@ const eventsData: Event[] = [
     soldOut: false,
   },
   {
-    id: "6",
-    title: "Lesungen und Akustik-Nacht am Turm",
+    id: '6',
+    title: 'Akustik Open-Air am Turm',
     description:
       "Teile dein Talent oder entdecke neue Künstler bei unserer gemütlichen Akustik Open-Mic-Nacht. Sänger, Dichter und Geschichtenerzähler sind alle willkommen. Die Anmeldung beginnt um 19:30 Uhr.",
     date: "2026-02-21",

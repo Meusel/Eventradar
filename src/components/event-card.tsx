@@ -6,21 +6,12 @@ import { Button } from "./ui/button";
 import { Calendar, MapPin, Ticket } from "lucide-react";
 import Link from "next/link";
 
-export default function EventCard({ event }: { event: Event }) {
-  const eventDate = new Date(event.time.start).toLocaleDateString("de-DE", {
-    weekday: "short",
-    day: "2-digit",
-    month: "2-digit",
-  });
-  const eventTime = new Date(event.time.start).toLocaleTimeString("de-DE", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+type EventCardProps = {
+  event: Event;
+  priority?: boolean;
+};
 
-  const hasOnlineTickets = event.extras.includes("Online-Tickets");
-  const hasBoxOffice = event.extras.includes("Abendkasse");
-  const needsRegistration = event.extras.includes("Anmeldung erforderlich");
-
+export default function EventCard({ event, priority = false }: EventCardProps) {
   return (
     <Link href={`/events/${event.id}`} className="group block">
       <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">
@@ -31,8 +22,9 @@ export default function EventCard({ event }: { event: Event }) {
               alt={event.title}
               data-ai-hint={event.imageHint}
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+              priority={priority}
             />
             <Badge
               variant="secondary"
