@@ -12,6 +12,15 @@ type EventCardProps = {
 };
 
 export default function EventCard({ event, priority = false }: EventCardProps) {
+  const hasOnlineTickets = event.extras.includes("Online-Tickets");
+  const hasBoxOffice = event.extras.includes("Abendkasse");
+  const needsRegistration = event.extras.includes("Anmeldung erforderlich");
+  
+  const handleExternalLinkClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
+  }
+
   return (
     <Link href={`/events/${event.id}`} className="group block">
       <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">

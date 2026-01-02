@@ -159,6 +159,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 5,
     duration: 3,
+    extras: ["Abendkasse"],
+    isFree: false,
+    soldOut: false,
   },
 ];
 

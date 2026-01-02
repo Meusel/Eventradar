@@ -11,14 +11,17 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
 import { getEventRecommendations } from "@/ai/ai-event-recommendations";
+import { Checkbox } from "./ui/checkbox";
+import Link from "next/link";
 
 export default function AiRecommendations() {
   const [interests, setInterests] = useState("");
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasConsented, setHasConsented] = useState(false);
 
   const handleGetRecommendations = async () => {
-    if (!interests) return;
+    if (!interests || !hasConsented) return;
     setIsLoading(true);
     setRecommendations([]);
     try {
@@ -52,11 +55,24 @@ export default function AiRecommendations() {
           value={interests}
           onChange={(e) => setInterests(e.target.value)}
         />
+        <div className="flex items-center space-x-2">
+            <Checkbox id="terms" onCheckedChange={(checked) => setHasConsented(checked as boolean)} />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Ich stimme der Verarbeitung meiner Interessen gemäß der{' '}
+              <Link href="/privacy" className="underline">
+                Datenschutzerklärung
+              </Link>{' '}
+              zu.
+            </label>
+        </div>
         <Button
           variant="accent"
           className="w-full"
           onClick={handleGetRecommendations}
-          disabled={isLoading}
+          disabled={isLoading || !interests || !hasConsented}
         >
           {isLoading ? (
             <Loader className="h-5 w-5 animate-spin" />
