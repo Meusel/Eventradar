@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React, { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Event } from '@/lib/types';
@@ -30,16 +30,16 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * 2 * Math.asin(Math.sqrt(a));
 };
 
-const MapUpdater = ({ event, markerRef }: { event: Event | null, markerRef: React.RefObject<LeafletMarker> | null }) => {
+const MapUpdater = ({ event, markerRef }: { event: Event | null, markerRef: LeafletMarker | null }) => {
     const map = useMap();
     useEffect(() => {
-        if (event && markerRef?.current) {
+        if (event && markerRef) {
             map.flyTo([event.latitude, event.longitude], 15, {
                 animate: true,
                 duration: 1.5
             });
             setTimeout(() => {
-                markerRef.current?.openPopup();
+                markerRef.openPopup();
             }, 1600);
         }
     }, [event, map, markerRef]);
@@ -79,7 +79,7 @@ const MapEvents = memo(({ events, location, selectedEvent, markerRefs, handleMor
                 return (
                     <Marker
                         key={event.id}
-                        ref={markerRefs.current[event.id]}
+                        ref={markerRefs(event.id)}
                         position={[event.latitude, event.longitude]}
                         icon={createCustomIcon(getCategoryColor(event.category))}
                     >
@@ -101,18 +101,17 @@ const MapEvents = memo(({ events, location, selectedEvent, markerRefs, handleMor
                     </Marker>
                 )
             })}
-            <MapUpdater event={selectedEvent} markerRef={selectedEvent ? markerRefs.current[selectedEvent.id] : null} />
+            <MapUpdater event={selectedEvent} markerRef={selectedEvent ? markerRefs(selectedEvent.id) : null} />
         </>
     )
 });
 MapEvents.displayName = 'MapEvents';
 
-
 const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange, selectedEventId }) => {
   const [activeCategory, setActiveCategory] = useState('Alle');
   const { location } = useUserLocation();
   const router = useRouter();
-  const markerRefs = useRef<{ [key: string]: React.RefObject<LeafletMarker> }>({});
+  const markerRefs = useRef<{ [key: string]: LeafletMarker | null }>({});
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
@@ -120,15 +119,17 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange,
       const event = events.find(e => e.id === selectedEventId);
       setSelectedEvent(event || null);
     } else {
-        setSelectedEvent(null);
+      setSelectedEvent(null);
     }
   }, [selectedEventId, events]);
 
-  events.forEach(event => {
-    if (!markerRefs.current[event.id]) {
-      markerRefs.current[event.id] = React.createRef<LeafletMarker>();
-    }
-  });
+  const setMarkerRef = (id: string) => (ref: LeafletMarker | null) => {
+    markerRefs.current[id] = ref;
+  };
+
+  const getMarkerRef = (id: string) => {
+      return markerRefs.current[id];
+  }
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
@@ -185,7 +186,7 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange,
             events={events}
             location={location}
             selectedEvent={selectedEvent}
-            markerRefs={markerRefs}
+            markerRefs={setMarkerRef}
             handleMoreInfoClick={handleMoreInfoClick}
             handleGetDirectionsClick={handleGetDirectionsClick}
         />

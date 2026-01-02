@@ -21,6 +21,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 5,
     duration: 4,
+    extras: ["Online-Tickets", "Abendkasse"],
+    isFree: false,
+    soldOut: false,
   },
   {
     id: '2',
@@ -38,6 +41,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 0,
     duration: 3,
+    extras: ["Anmeldung erforderlich"],
+    isFree: true,
+    soldOut: false,
   },
   {
     id: '3',
@@ -55,6 +61,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 10,
     duration: 6,
+    extras: ["Online-Tickets"],
+    isFree: false,
+    soldOut: true, // Example of a sold out event
   },
   {
     id: '4',
@@ -72,6 +81,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 5,
     duration: 8,
+    extras: ["Anmeldung erforderlich"],
+    isFree: false,
+    soldOut: false,
   },
   {
     id: '5',
@@ -89,6 +101,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 0,
     duration: 3,
+    extras: [],
+    isFree: true,
+    soldOut: false,
   },
   {
     id: '6',
@@ -106,6 +121,9 @@ const eventsData: Event[] = [
     ticketUrl: "#",
     price: 5,
     duration: 3,
+    extras: ["Abendkasse"],
+    isFree: false,
+    soldOut: false,
   },
 ];
 

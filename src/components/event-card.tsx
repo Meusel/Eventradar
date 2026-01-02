@@ -1,9 +1,12 @@
+
+"use client";
+
 import type { Event } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { CalendarDays, MapPin, BadgeEuro, Clock } from "lucide-react";
+import { CalendarDays, MapPin, Ticket } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -11,6 +14,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 type EventCardProps = {
   event: Event;
@@ -18,6 +22,15 @@ type EventCardProps = {
 };
 
 export default function EventCard({ event, priority = false }: EventCardProps) {
+  const hasOnlineTickets = event.extras.includes("Online-Tickets");
+  const hasBoxOffice = event.extras.includes("Abendkasse");
+  const needsRegistration = event.extras.includes("Anmeldung erforderlich");
+  
+  const handleExternalLinkClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
+  }
+
   return (
     <Link href={`/events/${event.id}`} className="group block">
       <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">
@@ -47,6 +60,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarDays className="h-4 w-4 shrink-0" />
             <span>
+              {/* Assuming event.date and event.time are available from the merged Event type */}
               {format(new Date(event.date), "EEEE, dd. MMMM yyyy", { locale: de })} um{" "}
               {event.time}
             </span>
@@ -56,15 +70,36 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
             <span>{event.location}</span>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between items-center p-4 pt-0 text-sm">
-           <div className="flex items-center gap-1 font-semibold">
-             <BadgeEuro className="h-4 w-4 shrink-0 text-muted-foreground" />
-             <span>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
-           </div>
-           <div className="flex items-center gap-1 text-muted-foreground">
-             <Clock className="h-4 w-4 shrink-0" />
-             <span>{event.duration} h</span>
-           </div>
+        <CardFooter className="flex justify-between items-center p-4 pt-0">
+          <div className="text-lg font-bold">
+            {event.isFree ? "Kostenlos" : `${event.price} €`}
+          </div>
+          <div className="flex items-center">
+            {(() => {
+                if (event.soldOut) {
+                    return <Badge variant="destructive">Ausverkauft</Badge>;
+                }
+                if (hasOnlineTickets) {
+                    return (
+                        <Button size="sm" onClick={handleExternalLinkClick}>
+                            <Ticket className="mr-2 h-4 w-4" />
+                            Ticket kaufen
+                        </Button>
+                    );
+                }
+                if (needsRegistration) {
+                     return (
+                        <Button size="sm" onClick={handleExternalLinkClick}>
+                            Anmelden
+                        </Button>
+                    );
+                }
+                if (hasBoxOffice) {
+                    return <Badge variant="outline">Abendkasse</Badge>;
+                }
+                return null;
+            })()}
+          </div>
         </CardFooter>
       </Card>
     </Link>

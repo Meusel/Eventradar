@@ -13,4 +13,7 @@ export type Event = {
   ticketUrl: string;
   price: number;
   duration: number; // in hours
+  extras: string[];
+  isFree: boolean;
+  soldOut: boolean;
 };
