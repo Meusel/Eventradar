@@ -163,6 +163,22 @@ const eventsData: Event[] = [
     isFree: false,
     soldOut: false,
   },
+  {
+    id: '7',
+    title: 'Jazzabend im Objekt 5',
+    description: 'Genieße einen entspannten Abend mit Live-Jazzmusik in der einzigartigen Atmosphäre des Objekt 5. Erlebe talentierte lokale Musiker und genieße dazu kühle Getränke.',
+    date: '2026-02-25',
+    time: '20:00',
+    category: 'Musik',
+    location: 'Objekt 5, Seebener Straße 5, 06114 Halle (Saale)',
+    imageUrl: '/images/jazz-abend.jpg',
+    imageHint: 'Jazz-Club-Atmosphäre mit Saxophon',
+    ticketUrl: '#',
+    price: 12,
+    duration: 3,
+    priority: 2,
+    boxOffice: true,
+  }
 ];
 
 export function getEvents(): Event[] {
