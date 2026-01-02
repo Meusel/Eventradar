@@ -89,33 +89,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <Header />
-      <main className="flex-1 bg-background pb-24">
-        <div className="container mx-auto max-w-7xl px-4 py-8">
-          {renderContent()}
-        </div>
-      </main>
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <nav className="container mx-auto flex h-16 max-w-7xl items-center justify-around px-4">
-            <Button variant="ghost" onClick={() => setActiveView('home')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'home' ? 'text-primary' : ''}`}>
-                <HomeIcon className="h-6 w-6"/>
-                <span className="text-xs">Home</span>
-            </Button>
-            <Button variant="ghost" onClick={() => setActiveView('search')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'search' ? 'text-primary' : ''}`}>
-                <Search className="h-6 w-6"/>
-                <span className="text-xs">Suche</span>
-            </Button>
-            <Button variant="ghost" onClick={() => setActiveView('recommendations')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'recommendations' ? 'text-primary' : ''}`}>
-                <Sparkles className="h-6 w-6"/>
-                <span className="text-xs">Für Dich</span>
-            </Button>
-            <Button variant="ghost" onClick={() => setActiveView('discover')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'discover' ? 'text-primary' : ''}`}>
-                <Compass className="h-6 w-6"/>
-                <span className="text-xs">Entdecken</span>
-            </Button>
-        </nav>
-      </footer>
-    </div>
+    <Suspense fallback={<div>Wird geladen...</div>}>
+      <App />
+    </Suspense>
   );
 }

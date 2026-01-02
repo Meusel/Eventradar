@@ -1,28 +1,39 @@
+"use client";
+
 import type { Event } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
-import { format } from "date-fns";
-import { de } from "date-fns/locale";
-import { CalendarDays, MapPin, BadgeEuro, Clock, Ticket } from "lucide-react";
+
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+  CalendarDays,
+  MapPin,
+  BadgeEuro,
+  Clock,
+  Ticket,
+} from "lucide-react";
+
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
 import { PRIORITY_MAP } from "@/lib/priority";
 
 type EventCardProps = {
   event: Event;
+  priority?: boolean;
 };
 
-export default function EventCard({ event }: EventCardProps) {
+export default function EventCard({ event, priority = false }: EventCardProps) {
   const priorityInfo = PRIORITY_MAP[event.priority];
-  
+
+  const hasOnlineTickets = event.extras.includes("Online-Tickets");
+  const hasBoxOffice = event.extras.includes("Abendkasse");
+  const needsRegistration = event.extras.includes("Anmeldung erforderlich");
+
   return (
-    <Link href={`/events/${event.id}`} className="group block">
+    <Link href={`/events/${event.id}`} className="group block h-full">
       <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">
+        {/* IMAGE */}
         <CardHeader className="p-0">
           <div className="relative h-48 w-full">
             <Image
@@ -30,63 +41,109 @@ export default function EventCard({ event }: EventCardProps) {
               alt={event.title}
               data-ai-hint={event.imageHint}
               fill
-              sizes="100vw"
-              className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              priority={priority}
             />
-            {priorityInfo.icon && (
+
+            {priorityInfo?.icon && (
               <div className="absolute top-3 left-3 bg-destructive/80 text-destructive-foreground backdrop-blur-sm p-1 rounded-full">
                 <span className="h-5 w-5">{priorityInfo.icon}</span>
               </div>
             )}
-            {priorityInfo.badge && (
+
+            {priorityInfo?.badge && (
               <Badge
                 variant="secondary"
-                className="absolute bottom-3 left-3 bg-card/80 text-card-foreground backdrop-blur-sm"
+                className="absolute bottom-3 left-3 bg-card/80 backdrop-blur-sm"
               >
                 {priorityInfo.badge}
               </Badge>
             )}
+
             <Badge
               variant="secondary"
-              className="absolute top-3 right-3 bg-card/80 text-card-foreground backdrop-blur-sm"
+              className="absolute top-3 right-3 bg-card/80 backdrop-blur-sm"
             >
               {event.category}
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="p-4 flex-grow">
-          <h3 className="mb-2 text-lg font-bold font-headline leading-tight">
+
+        {/* CONTENT */}
+        <CardContent className="flex flex-col gap-4 pt-4">
+          <h3 className="text-lg font-semibold leading-tight">
             {event.title}
           </h3>
+
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <CalendarDays className="h-4 w-4 shrink-0" />
-            <span>
-              {format(new Date(event.date), "EEEE, dd. MMMM yyyy", { locale: de })} um{" "}
-              {event.time}
-            </span>
+            <CalendarDays className="h-4 w-4" />
+            <span>{event.date}</span>
           </div>
+
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 shrink-0" />
+            <MapPin className="h-4 w-4" />
             <span>{event.location}</span>
           </div>
+
+          <div className="mt-2 flex items-center justify-between border-t pt-4">
+            <div className="text-xl font-bold">
+              {event.isFree ? "Kostenlos" : `${event.price} €`}
+            </div>
+
+            <div>
+              {event.soldOut && (
+                <Badge variant="destructive">Ausverkauft</Badge>
+              )}
+
+              {!event.soldOut && hasOnlineTickets && (
+                <Button asChild size="sm">
+                  <a
+                    href={event.ticketUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Ticket className="mr-2 h-4 w-4" />
+                    Ticket kaufen
+                  </a>
+                </Button>
+              )}
+
+              {!event.soldOut && needsRegistration && (
+                <Button asChild size="sm">
+                  <a
+                    href={event.ticketUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Anmelden
+                  </a>
+                </Button>
+              )}
+
+              {!event.soldOut && !hasOnlineTickets && hasBoxOffice && (
+                <Badge variant="outline">Abendkasse</Badge>
+              )}
+            </div>
+          </div>
         </CardContent>
-        <CardFooter className="flex justify-between items-center p-4 pt-0 text-sm">
-           <div className="flex items-center gap-1 font-semibold">
-             <BadgeEuro className="h-4 w-4 shrink-0 text-muted-foreground" />
-             <span>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
-           </div>
-           {event.boxOffice && (
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <Ticket className="h-4 w-4 shrink-0" />
-                <span>Abendkasse</span>
-              </div>
-            )}
-           <div className="flex items-center gap-1 text-muted-foreground">
-             <Clock className="h-4 w-4 shrink-0" />
-             <span>{event.duration} h</span>
-           </div>
+
+        {/* FOOTER */}
+        <CardFooter className="flex justify-between items-center text-sm text-muted-foreground pt-0">
+          <div className="flex items-center gap-1">
+            <BadgeEuro className="h-4 w-4" />
+            <span>{event.isFree ? "Kostenlos" : `${event.price} €`}</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            <span>{event.duration} h</span>
+          </div>
         </CardFooter>
       </Card>
     </Link>
   );
 }
+

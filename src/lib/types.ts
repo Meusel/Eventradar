@@ -6,11 +6,22 @@ export type Event = {
   time: string;
   category: "Musik" | "Kunst" | "Party" | "Sport" | "Workshop";
   location: string;
+  latitude: number;
+  longitude: number;
   imageUrl: string;
   imageHint: string;
   ticketUrl: string;
+  categories: string[];
+  time: {
+    start: string;
+    end: string;
+  };
+  district: string;
+  venue: string;
   price: number;
-  duration: number; // in hours
-  priority?: number;
-  boxOffice?: boolean;
+  isFree: boolean;
+  targetGroups: string[];
+  accessibility: string[];
+  extras: string[];
+  soldOut: boolean;
 };

@@ -1,26 +1,27 @@
-"use client";
+'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import type { Event } from "@/lib/types";
-import EventCard from "./event-card";
-import { Button } from "./ui/button";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { useState, useMemo, useEffect } from 'react';
+import type { Event } from '@/lib/types';
+import EventCard from './event-card';
+import { Button } from './ui/button';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Filter } from "lucide-react";
+} from '@/components/ui/accordion';
+import { Filter } from 'lucide-react';
 
 type EventFeedProps = {
   events: Event[];
   categories: string[];
+  onFilterChange: (category: string) => void;
 };
 
-export default function EventFeed({ events, categories }: EventFeedProps) {
-  const [activeCategory, setActiveCategory] = useState("Alle");
+export default function EventFeed({ events, categories, onFilterChange }: EventFeedProps) {
+  const [activeCategory, setActiveCategory] = useState('Alle');
   const [price, setPrice] = useState(50);
   const [duration, setDuration] = useState(12);
   const [isClient, setIsClient] = useState(false);
@@ -29,15 +30,14 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    if (isClient) {
-      setActiveCategory("Alle");
-    }
-  }, [events, isClient]);
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    onFilterChange(category);
+  }
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
-    if (activeCategory !== "Alle") {
+    if (activeCategory !== 'Alle') {
       filtered = filtered.filter((event) => event.category === activeCategory);
     }
     filtered = filtered.filter((event) => event.price <= price);
@@ -56,9 +56,9 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
             {categories.map((category) => (
             <Button
                 key={category}
-                variant={activeCategory === category ? "default" : "outline"}
+                variant={activeCategory === category ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setActiveCategory(category)}
+                onClick={() => handleCategoryChange(category)}
                 className="rounded-full flex-shrink-0"
             >
                 {category}
@@ -109,9 +109,9 @@ export default function EventFeed({ events, categories }: EventFeedProps) {
       </Accordion>
 
       {filteredEvents.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {filteredEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredEvents.map((event, index) => (
+            <EventCard key={event.id} event={event} priority={index === 0} />
           ))}
         </div>
       ) : (
