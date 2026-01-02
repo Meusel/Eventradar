@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from "react";
 import { useState } from "react";
 import Header from "@/components/header";
 import EventFeed from "@/components/event-feed";
