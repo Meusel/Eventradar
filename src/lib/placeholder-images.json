@@ -4,43 +4,50 @@
       "id": "indie-night",
       "description": "A band playing on stage at an indie music night.",
       "imageUrl": "https://images.unsplash.com/photo-1548895342-cbe56c360e2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb25jZXJ0JTIwbXVzaWN8ZW58MHx8fHwxNzY1MTI2MzAwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "concert music"
+      "imageHint": "concert music",
+      "targetAudience": "Jeder"
     },
     {
       "id": "art-exhibition",
       "description": "An abstract painting at a modern art exhibition.",
       "imageUrl": "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhcnQlMjBnYWxsZXJ5fGVufDB8fHx8MTc2NTE0NDg0Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "art gallery"
+      "imageHint": "art gallery",
+      "targetAudience": "Jeder"
     },
     {
       "id": "techno-party",
       "description": "A DJ performing at a techno party with laser lights.",
       "imageUrl": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkaiUyMHBhcnR5fGVufDB8fHx8MTc2NTEzMTYxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "dj party"
+      "imageHint": "dj party",
+      "targetAudience": "Erwachsene"
     },
     {
       "id": "streetball-tournament",
       "description": "People playing basketball at a streetball tournament.",
       "imageUrl": "https://images.unsplash.com/photo-1527527753602-fb58e749276a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YmFza2V0YmFsbCUyMGdhbWV8ZW58MHx8fHwxNzY1MTA4NDExfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "basketball game"
+      "imageHint": "basketball game",
+      "targetAudience": "Jeder"
     },
     {
       "id": "coding-workshop",
       "description": "A person coding on a laptop at a workshop.",
       "imageUrl": "https://images.unsplash.com/photo-1580982338369-650de7dfdc07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb2RpbmclMjB3b3Jrc2hvcHxlbnwwfHx8fDE3NjUxNjUwNjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "coding workshop"
+      "imageHint": "coding workshop",
+      "targetAudience": "Jeder"
     },
     {
       "id": "open-mic-night",
       "description": "A person singing into a microphone at an open mic night.",
       "imageUrl": "https://images.unsplash.com/photo-1541592553160-82008b127ccb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxvcGVuJTIwbWljfGVufDB8fHx8MTc2NTE2Njk2NHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "open mic"
+      "imageHint": "open mic",
+      "targetAudience": "Jeder"
     },
     {
       "id": "event-detail-hero",
       "description": "A large crowd at a concert, to be used as a hero image.",
       "imageUrl": "https://images.unsplash.com/photo-1682133114083-81319fc857fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb25jZXJ0JTIwY3Jvd2R8ZW58MHx8fHwxNzY1MTcwNjIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "concert crowd"
+      "imageHint": "concert crowd",
+      "targetAudience": "Jeder"
     }
   ]
 }

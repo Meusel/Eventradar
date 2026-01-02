@@ -11,6 +11,17 @@ export type Event = {
   imageUrl: string;
   imageHint: string;
   ticketUrl: string;
+  categories: string[];
+  time: {
+    start: string;
+    end: string;
+  };
+  district: string;
+  venue: string;
   price: number;
-  duration: number; // in hours
+  isFree: boolean;
+  targetGroups: string[];
+  accessibility: string[];
+  extras: string[];
+  soldOut: boolean;
 };

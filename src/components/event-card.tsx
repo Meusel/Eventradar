@@ -1,16 +1,10 @@
+"use client";
+
 import type { Event } from "@/lib/types";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Calendar, MapPin, Ticket } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import { format } from "date-fns";
-import { de } from "date-fns/locale";
-import { CalendarDays, MapPin, BadgeEuro, Clock } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 type EventCardProps = {
   event: Event;
@@ -39,34 +33,43 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
               {event.category}
             </Badge>
           </div>
-        </CardHeader>
-        <CardContent className="p-4 flex-grow">
-          <h3 className="mb-2 text-lg font-bold font-headline leading-tight">
-            {event.title}
-          </h3>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <CalendarDays className="h-4 w-4 shrink-0" />
-            <span>
-              {format(new Date(event.date), "EEEE, dd. MMMM yyyy", { locale: de })} um{" "}
-              {event.time}
-            </span>
+        </div>
+        <div className="mt-6 flex items-center justify-between pt-4 border-t">
+           <div className="text-xl font-bold">
+            {event.isFree ? "Kostenlos" : `${event.price} €`}
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 shrink-0" />
-            <span>{event.location}</span>
+          <div className="flex items-center">
+            {(() => {
+                if (event.soldOut) {
+                    return <Badge variant="destructive">Ausverkauft</Badge>;
+                }
+                if (hasOnlineTickets) {
+                    return (
+                        <Button asChild size="sm">
+                            <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer">
+                                <Ticket className="mr-2 h-4 w-4" />
+                                Ticket kaufen
+                            </a>
+                        </Button>
+                    );
+                }
+                if (needsRegistration) {
+                     return (
+                        <Button asChild size="sm">
+                            <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer">
+                                Anmelden
+                            </a>
+                        </Button>
+                    );
+                }
+                if (hasBoxOffice) {
+                    return <Badge variant="outline">Abendkasse</Badge>;
+                }
+                return null;
+            })()}
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-between items-center p-4 pt-0 text-sm">
-           <div className="flex items-center gap-1 font-semibold">
-             <BadgeEuro className="h-4 w-4 shrink-0 text-muted-foreground" />
-             <span>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
-           </div>
-           <div className="flex items-center gap-1 text-muted-foreground">
-             <Clock className="h-4 w-4 shrink-0" />
-             <span>{event.duration} h</span>
-           </div>
-        </CardFooter>
-      </Card>
-    </Link>
+        </div>
+      </div>
+    </div>
   );
 }
