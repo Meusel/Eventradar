@@ -86,11 +86,36 @@ export default function HomePage() {
       default:
         return <EventFeed events={filteredEvents} categories={categories} />;
     }
-  }
+  };
 
   return (
-    <Suspense fallback={<div>Wird geladen...</div>}>
-      <App />
-    </Suspense>
+    <>
+      <Header />
+      <main className="container py-8 pb-24 md:pb-8">
+        <Suspense fallback={<div className="text-center text-muted-foreground mt-8">Wird geladen...</div>}>
+          {renderContent()}
+        </Suspense>
+      </main>
+      <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-2 md:hidden z-10">
+        <div className="container mx-auto flex justify-around">
+          <Button variant={activeView === 'home' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('home')}>
+            <HomeIcon className="h-5 w-5" />
+            <span className="text-xs font-semibold">Home</span>
+          </Button>
+          <Button variant={activeView === 'discover' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('discover')}>
+            <Compass className="h-5 w-5" />
+            <span className="text-xs font-semibold">Entdecken</span>
+          </Button>
+          <Button variant={activeView === 'search' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('search')}>
+            <Search className="h-5 w-5" />
+            <span className="text-xs font-semibold">Suchen</span>
+          </Button>
+          <Button variant={activeView === 'recommendations' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('recommendations')}>
+            <Sparkles className="h-5 w-5" />
+            <span className="text-xs font-semibold">Für dich</span>
+          </Button>
+        </div>
+      </nav>
+    </>
   );
 }
