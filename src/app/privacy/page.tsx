@@ -1,11 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+
 
 export default function PrivacyPolicy() {
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <Card>
-        <CardHeader>
+        <CardHeader className="relative">
           <CardTitle>Datenschutzerklärung</CardTitle>
+          <Link href="/" passHref className="absolute top-4 right-4">
+              <Button variant="ghost" size="icon"><X className="h-6 w-6" /></Button>
+          </Link>
         </CardHeader>
         <CardContent className="prose max-w-none">
           <p>
