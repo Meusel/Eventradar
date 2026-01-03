@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { Suspense, useState, useEffect } from "react";
 import dynamic from 'next/dynamic'; // Import dynamic
 import Header from "@/components/header";
@@ -111,12 +111,12 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="container py-8 pb-24 md:pb-8">
+      <main className="container py-8 pb-24">
         <Suspense fallback={<div className="text-center text-muted-foreground mt-8">Wird geladen...</div>}>
           {renderContent()}
         </Suspense>
       </main>
-      <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-2 md:hidden z-10">
+      <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-2 z-10">
         <div className="container mx-auto flex justify-around">
           <Button variant={activeView === 'home' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('home')}>
             <HomeIcon className="h-5 w-5" />
