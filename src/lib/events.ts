@@ -9,7 +9,6 @@ const eventsData: Event[] = [
     description:
       "Erlebe das Beste von lokalen und internationalen Indie-Bands in der legendären Palette. Eine Nacht mit großartiger Musik, günstigen Getränken und guter Stimmung erwartet dich. Verpasse nicht das nächste große Ding!",
     date: "2026-02-07",
-    time: "20:00",
     category: "Musik",
     location: "Palette, Große Ulrichstraße 51, 06108 Halle (Saale)",
     latitude: 51.4833,
@@ -30,6 +29,7 @@ const eventsData: Event[] = [
     accessibility: [],
     extras: ["Online-Tickets", "Abendkasse"],
     soldOut: false,
+    duration: 4,
   },
   {
     id: '2',
@@ -37,7 +37,6 @@ const eventsData: Event[] = [
     description:
       "Besuche die Eröffnung von 'Dimensionen', einer neuen Ausstellung der aufstrebenden Künstlerin Klara Weiss. Entdecke abstrakte Formen und lebendige Farben, die die Wahrnehmung herausfordern. Freier Eintritt & kostenloser Sekt.",
     date: "2026-02-10",
-    time: "19:00",
     category: "Kunst",
     location: "Kunstmuseum Moritzburg, Friedemann-Bach-Platz 5, 06108 Halle (Saale)",
     latitude: 51.4856,
@@ -58,6 +57,7 @@ const eventsData: Event[] = [
     accessibility: ["Rollstuhlgerecht", "Barrierefreie Toilette"],
     extras: [],
     soldOut: false,
+    duration: 3,
   },
   {
     id: '3',
@@ -65,7 +65,6 @@ const eventsData: Event[] = [
     description:
       "Entfessle deine Energie bei unserem riesigen Studenten-Techno-Rave. Top lokale DJs legen die ganze Nacht harte Tracks auf. Besondere Studentenrabatte an der Bar.",
     date: "2026-02-12",
-    time: "23:00",
     category: "Party",
     location: "Station Endlos, Willy-Brandt-Straße 78, 06110 Halle (Saale)",
     latitude: 51.4701,
@@ -86,6 +85,7 @@ const eventsData: Event[] = [
     accessibility: [],
     extras: ["Online-Tickets", "Abendkasse"],
     soldOut: false,
+    duration: 6,
   },
   {
     id: '4',
@@ -93,7 +93,6 @@ const eventsData: Event[] = [
     description:
       "Hast du das Zeug dazu? Bilde ein Team und tritt beim jährlichen Halleschen Streetball-Turnier an. Preise, Musik und ein Food-Truck-Festival machen dies zu einem Muss für alle Basketball-Liebhaber.",
     date: "2026-02-14",
-    time: "12:00",
     category: "Sport",
     location: "Peißnitzinsel, 06108 Halle",
     latitude: 51.487,
@@ -114,6 +113,7 @@ const eventsData: Event[] = [
     accessibility: [],
     extras: ["Outdoor", "Online-Tickets", "Abendkasse"],
     soldOut: false,
+    duration: 8,
   },
   {
     id: '5',
@@ -121,7 +121,6 @@ const eventsData: Event[] = [
     description:
       "Lerne die Grundlagen von React.js in diesem praxisnahen Workshop für Anfänger. Perfekt für Studierende, die moderne Webanwendungen erstellen möchten. Bitte eigenen Laptop mitbringen.",
     date: "2026-02-18",
-    time: "17:00",
     category: "Workshop",
     location: "MLU Weinberg Campus, Von-Danckelmann-Platz 1, 06120 Halle",
     latitude: 51.491,
@@ -142,6 +141,7 @@ const eventsData: Event[] = [
     accessibility: ["Rollstuhlgerecht"],
     extras: ["Anmeldung erforderlich"],
     soldOut: false,
+    duration: 3,
   },
   {
     id: '6',
@@ -149,7 +149,6 @@ const eventsData: Event[] = [
     description:
       "Teile dein Talent oder entdecke neue Künstler bei unserer gemütlichen Akustik Open-Mic-Nacht. Sänger, Dichter und Geschichtenerzähler sind alle willkommen. Die Anmeldung beginnt um 19:30 Uhr.",
     date: "2026-02-21",
-    time: "20:00",
     category: "Musik",
     location: "Turm, Friedemann-Bach-Platz 5, 06108 Halle (Saale)",
     latitude: 51.4856,
@@ -162,13 +161,21 @@ const eventsData: Event[] = [
     extras: ["Abendkasse"],
     isFree: false,
     soldOut: false,
+    time: {
+        start: "2026-02-21T20:00:00Z",
+        end: "2026-02-21T23:00:00Z",
+    },
+    district: "Innenstadt",
+    venue: "Turm",
+    targetGroups: ["Alle"],
+    accessibility: [],
+    categories: ["Musik", "Open-Mic"],
   },
   {
     id: '7',
     title: 'Jazzabend im Objekt 5',
     description: 'Genieße einen entspannten Abend mit Live-Jazzmusik in der einzigartigen Atmosphäre des Objekt 5. Erlebe talentierte lokale Musiker und genieße dazu kühle Getränke.',
     date: '2026-02-25',
-    time: '20:00',
     category: 'Musik',
     location: 'Objekt 5, Seebener Straße 5, 06114 Halle (Saale)',
     imageUrl: '/images/jazz-abend.jpg',
@@ -176,8 +183,20 @@ const eventsData: Event[] = [
     ticketUrl: '#',
     price: 12,
     duration: 3,
-    priority: 2,
-    boxOffice: true,
+    latitude: 51.499,
+    longitude: 11.963,
+    isFree: false,
+    soldOut: false,
+    categories: ["Musik", "Jazz"],
+    time: {
+        start: "2026-02-25T20:00:00Z",
+        end: "2026-02-25T23:00:00Z",
+    },
+    district: "Giebichenstein",
+    venue: "Objekt 5",
+    targetGroups: ["Erwachsene", "Senioren"],
+    accessibility: ["Begrenzt rollstuhlgerecht"],
+    extras: ["Bar", "Abendkasse"],
   }
 ];
 
