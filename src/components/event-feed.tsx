@@ -17,11 +17,11 @@ import { Filter } from 'lucide-react';
 type EventFeedProps = {
   events: Event[];
   categories: string[];
-  onFilterChange: (category: string) => void;
+  activeCategory: string;
+  onCategoryChange: (category: string) => void;
 };
 
-export default function EventFeed({ events, categories, onFilterChange }: EventFeedProps) {
-  const [activeCategory, setActiveCategory] = useState('Alle');
+export default function EventFeed({ events, categories, activeCategory, onCategoryChange }: EventFeedProps) {
   const [price, setPrice] = useState(50);
   const [duration, setDuration] = useState(12);
   const [isClient, setIsClient] = useState(false);
@@ -30,20 +30,11 @@ export default function EventFeed({ events, categories, onFilterChange }: EventF
     setIsClient(true);
   }, []);
 
-  const handleCategoryChange = (category: string) => {
-    setActiveCategory(category);
-    onFilterChange(category);
-  }
-
   const filteredEvents = useMemo(() => {
-    let filtered = events;
-    if (activeCategory !== 'Alle') {
-      filtered = filtered.filter((event) => event.category === activeCategory);
-    }
-    filtered = filtered.filter((event) => event.price <= price);
-    filtered = filtered.filter((event) => event.duration <= duration);
-    return filtered;
-  }, [events, activeCategory, price, duration]);
+    // The parent component is now responsible for category filtering.
+    // This component only applies its own internal filters for price and duration.
+    return events.filter(event => event.price <= price && event.duration <= duration);
+  }, [events, price, duration]);
 
   if (!isClient) {
     return null; // or a loading skeleton
@@ -58,7 +49,7 @@ export default function EventFeed({ events, categories, onFilterChange }: EventF
                 key={category}
                 variant={activeCategory === category ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => handleCategoryChange(category)}
+                onClick={() => onCategoryChange(category)} // Use the passed-in handler
                 className="rounded-full flex-shrink-0"
             >
                 {category}

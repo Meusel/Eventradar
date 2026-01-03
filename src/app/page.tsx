@@ -1,6 +1,6 @@
 "use client";
-import { Suspense } from "react";
-import { useState } from "react";
+import { Suspense, useState, useEffect } from "react";
+import dynamic from 'next/dynamic'; // Import dynamic
 import Header from "@/components/header";
 import EventFeed from "@/components/event-feed";
 import AiRecommendations from "@/components/ai-recommendations";
@@ -11,27 +11,47 @@ import { Compass, Home as HomeIcon, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
 
+// Dynamically import EventMap with SSR disabled
+const EventMap = dynamic(() => import("@/components/event-map"), { 
+  ssr: false, 
+  loading: () => <div className="text-center text-muted-foreground mt-8">Karte wird geladen...</div>
+});
+
 export default function HomePage() {
   const allEvents = getEvents();
   const categories = ["Alle", ...new Set(allEvents.map((event) => event.category))];
+  
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("Alle");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(allEvents);
   const [activeView, setActiveView] = useState("home");
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    if (!term) {
-      setFilteredEvents(allEvents);
-    } else {
-      const lowercasedTerm = term.toLowerCase();
-      const newFilteredEvents = allEvents.filter(
+  useEffect(() => {
+    let events = allEvents;
+
+    if (activeCategory !== "Alle") {
+      events = events.filter(event => event.category === activeCategory);
+    }
+
+    if (searchTerm) {
+      const lowercasedTerm = searchTerm.toLowerCase();
+      events = events.filter(
         (event) =>
           event.title.toLowerCase().includes(lowercasedTerm) ||
           event.description.toLowerCase().includes(lowercasedTerm)
       );
-      setFilteredEvents(newFilteredEvents);
     }
+
+    setFilteredEvents(events);
+  }, [searchTerm, activeCategory, allEvents]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
   };
+  
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+  }
 
   const renderContent = () => {
     switch (activeView) {
@@ -55,7 +75,7 @@ export default function HomePage() {
                 />
               </div>
             <PriorityLegend />
-            <EventFeed events={filteredEvents} categories={categories} />
+            <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
           </>
         );
       case "search":
@@ -72,7 +92,7 @@ export default function HomePage() {
                   autoFocus
                 />
               </div>
-              {searchTerm ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
+              {searchTerm ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
             </>
         );
       case "recommendations":
@@ -82,9 +102,9 @@ export default function HomePage() {
           </div>
         );
       case "discover":
-         return <div className="text-center text-muted-foreground mt-8">Entdecken-Funktion kommt bald!</div>;
+         return <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />;
       default:
-        return <EventFeed events={filteredEvents} categories={categories} />;
+        return <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleCategoryChange}/>;
     }
   };
 
