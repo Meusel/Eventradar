@@ -26,9 +26,9 @@ type EventCardProps = {
 export default function EventCard({ event, priority = false }: EventCardProps) {
   const priorityInfo = PRIORITY_MAP[event.priority];
 
-  const hasOnlineTickets = event.extras.includes("Online-Tickets");
-  const hasBoxOffice = event.extras.includes("Abendkasse");
-  const needsRegistration = event.extras.includes("Anmeldung erforderlich");
+  const hasOnlineTickets = event.extras?.includes("Online-Tickets");
+  const hasBoxOffice = event.extras?.includes("Abendkasse");
+  const needsRegistration = event.extras?.includes("Anmeldung erforderlich");
 
   return (
     <Link href={`/events/${event.id}`} className="group block h-full">
@@ -146,4 +146,3 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
     </Link>
   );
 }
-

@@ -74,7 +74,9 @@ const MapEvents = memo(({ events, location, selectedEvent, markerRefs, handleMor
                     <Popup>Dein Standort</Popup>
                 </Marker>
             )}
-            {events.map((event: Event) => {
+            {events
+                .filter(event => typeof event.latitude === 'number' && typeof event.longitude === 'number')
+                .map((event: Event) => {
                 const distance = location ? calculateDistance(location.latitude, location.longitude, event.latitude, event.longitude).toFixed(2) : null;
                 return (
                     <Marker

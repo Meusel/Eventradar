@@ -1,6 +1,6 @@
 "use client";
-import { Suspense } from "react";
-import { useState } from "react";
+import { Suspense, useState, useEffect } from "react";
+import dynamic from 'next/dynamic'; // Import dynamic
 import Header from "@/components/header";
 import EventFeed from "@/components/event-feed";
 import AiRecommendations from "@/components/ai-recommendations";
@@ -11,27 +11,47 @@ import { Compass, Home as HomeIcon, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
 
+// Dynamically import EventMap with SSR disabled
+const EventMap = dynamic(() => import("@/components/event-map"), { 
+  ssr: false, 
+  loading: () => <div className="text-center text-muted-foreground mt-8">Karte wird geladen...</div>
+});
+
 export default function HomePage() {
   const allEvents = getEvents();
   const categories = ["Alle", ...new Set(allEvents.map((event) => event.category))];
+  
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("Alle");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(allEvents);
   const [activeView, setActiveView] = useState("home");
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    if (!term) {
-      setFilteredEvents(allEvents);
-    } else {
-      const lowercasedTerm = term.toLowerCase();
-      const newFilteredEvents = allEvents.filter(
+  useEffect(() => {
+    let events = allEvents;
+
+    if (activeCategory !== "Alle") {
+      events = events.filter(event => event.category === activeCategory);
+    }
+
+    if (searchTerm) {
+      const lowercasedTerm = searchTerm.toLowerCase();
+      events = events.filter(
         (event) =>
           event.title.toLowerCase().includes(lowercasedTerm) ||
           event.description.toLowerCase().includes(lowercasedTerm)
       );
-      setFilteredEvents(newFilteredEvents);
     }
+
+    setFilteredEvents(events);
+  }, [searchTerm, activeCategory, allEvents]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
   };
+  
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+  }
 
   const renderContent = () => {
     switch (activeView) {
@@ -55,7 +75,7 @@ export default function HomePage() {
                 />
               </div>
             <PriorityLegend />
-            <EventFeed events={filteredEvents} categories={categories} />
+            <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
           </>
         );
       case "search":
@@ -72,7 +92,7 @@ export default function HomePage() {
                   autoFocus
                 />
               </div>
-              {searchTerm ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
+              {searchTerm ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
             </>
         );
       case "recommendations":
@@ -82,15 +102,40 @@ export default function HomePage() {
           </div>
         );
       case "discover":
-         return <div className="text-center text-muted-foreground mt-8">Entdecken-Funktion kommt bald!</div>;
+         return <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />;
       default:
-        return <EventFeed events={filteredEvents} categories={categories} />;
+        return <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleCategoryChange}/>;
     }
-  }
+  };
 
   return (
-    <Suspense fallback={<div>Wird geladen...</div>}>
-      <App />
-    </Suspense>
+    <>
+      <Header />
+      <main className="container py-8 pb-24 md:pb-8">
+        <Suspense fallback={<div className="text-center text-muted-foreground mt-8">Wird geladen...</div>}>
+          {renderContent()}
+        </Suspense>
+      </main>
+      <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-2 md:hidden z-10">
+        <div className="container mx-auto flex justify-around">
+          <Button variant={activeView === 'home' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('home')}>
+            <HomeIcon className="h-5 w-5" />
+            <span className="text-xs font-semibold">Home</span>
+          </Button>
+          <Button variant={activeView === 'discover' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('discover')}>
+            <Compass className="h-5 w-5" />
+            <span className="text-xs font-semibold">Entdecken</span>
+          </Button>
+          <Button variant={activeView === 'search' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('search')}>
+            <Search className="h-5 w-5" />
+            <span className="text-xs font-semibold">Suchen</span>
+          </Button>
+          <Button variant={activeView === 'recommendations' ? 'secondary' : 'ghost'} size="sm" className="flex flex-col h-auto gap-1 p-2" onClick={() => setActiveView('recommendations')}>
+            <Sparkles className="h-5 w-5" />
+            <span className="text-xs font-semibold">Für dich</span>
+          </Button>
+        </div>
+      </nav>
+    </>
   );
 }
