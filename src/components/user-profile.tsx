@@ -28,6 +28,7 @@ export function UserProfile() {
   const [email, setEmail] = useState("ronny.mueller@example.com");
   const [avatarUrl, setAvatarUrl] = useState("https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop");
   const [allowDataSharing, setAllowDataSharing] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleEdit = () => setIsEditing(true);
@@ -97,7 +98,7 @@ export function UserProfile() {
                 <Button variant="outline" onClick={handleCancel}>
                   Abbrechen
                 </Button>
-                <Button onClick={handleSave}>Speichern</Button>
+                <Button onClick={handleSave} disabled={!agreedToTerms}>Speichern</Button>
               </div>
             )}
           </div>
@@ -171,6 +172,22 @@ export function UserProfile() {
             <p className="text-xs text-gray-500 mt-2">
                 Weitere Informationen findest du in unserer <a href="/privacy" className="text-blue-600 hover:underline">Datenschutzerklärung</a>.
             </p>
+            <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border mt-4">
+                <div className="flex items-center gap-4">
+                    <ShieldCheck className="h-6 w-6 text-gray-600" />
+                    <div>
+                        <p className="font-semibold text-base text-gray-800">Nutzungsbedingungen</p>
+                        <p className="text-sm text-gray-500">
+                            Ich stimme den <a href="/terms" className="text-blue-600 hover:underline">Nutzungsbedingungen</a> zu.
+                        </p>
+                    </div>
+                </div>
+                <Switch
+                    id="terms-agreement"
+                    checked={agreedToTerms}
+                    onCheckedChange={setAgreedToTerms}
+                />
+            </div>
         </div>
 
         <div>
