@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from "@/components/ui/alert-dialog";
-import { X, Users, Lock, Trash2, Edit, Pause, ShieldCheck } from "lucide-react";
+import { X, Users, Lock, Trash2, Edit, Pause, ShieldCheck, Cookie } from "lucide-react";
 
 export function UserProfile() {
   const [isPublic, setIsPublic] = useState(false);
@@ -29,7 +29,20 @@ export function UserProfile() {
   const [avatarUrl, setAvatarUrl] = useState("https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop");
   const [allowDataSharing, setAllowDataSharing] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [cookieConsent, setCookieConsent] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const consent = localStorage.getItem("cookie-consent");
+    if (consent === "accepted") {
+      setCookieConsent(true);
+    }
+  }, []);
+
+  const handleCookieConsentChange = (checked: boolean) => {
+    setCookieConsent(checked);
+    localStorage.setItem("cookie-consent", checked ? "accepted" : "declined");
+  };
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
@@ -186,6 +199,22 @@ export function UserProfile() {
                     id="terms-agreement"
                     checked={agreedToTerms}
                     onCheckedChange={setAgreedToTerms}
+                />
+            </div>
+            <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border mt-4">
+                <div className="flex items-center gap-4">
+                    <Cookie className="h-6 w-6 text-gray-600" />
+                    <div>
+                        <p className="font-semibold text-base text-gray-800">Cookies</p>
+                        <p className="text-sm text-gray-500">
+                            Ich akzeptiere die Verwendung von Cookies.
+                        </p>
+                    </div>
+                </div>
+                <Switch
+                    id="cookie-consent"
+                    checked={cookieConsent}
+                    onCheckedChange={handleCookieConsentChange}
                 />
             </div>
         </div>
