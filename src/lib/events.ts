@@ -133,22 +133,22 @@ const eventsData: Event[] = [
 
 export function getEvents(): Event[] {
   const sortedEvents = [...eventsData].sort((a, b) => {
-    // Studentenrabatt priorisieren
-    if (a.studentDiscount && !b.studentDiscount) {
-      return -1;
-    }
-    if (!a.studentDiscount && b.studentDiscount) {
-      return 1;
-    }
-
-    // Nach Priorität sortieren (höhere Priorität zuerst)
-    const priorityA = a.priority ?? 0;
-    const priorityB = b.priority ?? 0;
-    if (priorityA !== priorityB) {
-      return priorityB - priorityA;
+    // 1. Kostenlos vs. Kostenpflichtig
+    const aIsFree = a.price === 0;
+    const bIsFree = b.price === 0;
+    if (aIsFree !== bIsFree) {
+      return aIsFree ? -1 : 1;
     }
 
-    return 0;
+    // 2. Studentenrabatt vs. Kein Studentenrabatt
+    const aHasDiscount = a.studentDiscount ?? false;
+    const bHasDiscount = b.studentDiscount ?? false;
+    if (aHasDiscount !== bHasDiscount) {
+      return aHasDiscount ? -1 : 1;
+    }
+
+    // 3. Nach Priorität (höher zuerst)
+    return (b.priority ?? 0) - (a.priority ?? 0);
   });
   return sortedEvents;
 }
