@@ -19,7 +19,8 @@ type EventCardProps = {
 
 export default function EventCard({ event }: EventCardProps) {
   const priorityInfo = PRIORITY_MAP[event.priority];
-  
+  const isFree = event.price === 0;
+
   return (
     <Link href={`/events/${event.id}`} className="group block">
       <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col">
@@ -44,6 +45,14 @@ export default function EventCard({ event }: EventCardProps) {
                 className="absolute bottom-3 left-3 bg-card/80 text-card-foreground backdrop-blur-sm"
               >
                 {priorityInfo.badge}
+              </Badge>
+            )}
+            {isFree && (
+                <Badge
+                variant="default"
+                className="absolute bottom-3 right-3 bg-green-600/80 text-white backdrop-blur-sm"
+              >
+                Kostenlos
               </Badge>
             )}
             <Badge
@@ -71,9 +80,9 @@ export default function EventCard({ event }: EventCardProps) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between items-center p-4 pt-0 text-sm">
-           <div className="flex items-center gap-1 font-semibold">
+           <div className={`flex items-center gap-1 font-semibold ${isFree ? 'text-green-600' : ''}`}>
              <BadgeEuro className="h-4 w-4 shrink-0 text-muted-foreground" />
-             <span>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
+             <span>{isFree ? 'Kostenlos' : `${event.price} €`}</span>
            </div>
            {event.boxOffice && (
               <div className="flex items-center gap-1 text-muted-foreground">
