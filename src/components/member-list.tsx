@@ -2,6 +2,7 @@ import { User } from "@/lib/users";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
 import { MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 interface MemberListProps {
   members: User[];
@@ -27,10 +28,11 @@ export default function MemberList({ members }: MemberListProps) {
             </div>
           </div>
           {member.profileStatus === 'public' && (
-            // In a real app, this would initiate a private chat
-            <Button variant="ghost" size="icon">
-              <MessageCircle className="h-5 w-5 text-muted-foreground" />
-            </Button>
+            <Link href={`/chats/${member.id}`} passHref>
+              <Button variant="ghost" size="icon">
+                <MessageCircle className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </Link>
           )}
         </div>
       ))}

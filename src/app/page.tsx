@@ -13,6 +13,8 @@ import PriorityLegend from "@/components/priority-legend";
 import CommunityFeed from "@/components/community-feed";
 import { getCommunities } from "@/lib/communities";
 import type { Community } from "@/lib/types";
+import { getCommunitySuggestions } from "@/lib/community-suggestions";
+import CommunitySuggestions from "@/components/community-suggestions";
 
 // Dynamically import EventMap with SSR disabled
 const EventMap = dynamic(() => import("@/components/event-map"), { 
@@ -37,15 +39,21 @@ export default function HomePage() {
 function App() {
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
+  const [suggestedCommunities, setSuggestedCommunities] = useState<Community[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [activeFilter, setActiveFilter] = useState<string>("Alle");
+  const [activeCategory, setActiveCategory] = useState<string>("Alle");
+
+  // Mock current user. In a real app, this would come from your auth solution.
+  const currentUserId = 'user-1';
 
   // Fetch events on component mount
   useEffect(() => {
     const events = getEvents();
     const communities = getCommunities();
+    const suggestions = getCommunitySuggestions(currentUserId);
     setAllEvents(events);
     setCommunities(communities);
+    setSuggestedCommunities(suggestions);
     const uniqueCategories = [
       "Alle",
       ...new Set(events.map((event) => event.category)),
@@ -58,8 +66,8 @@ function App() {
 
   const filteredEvents = allEvents
     .filter((event) => {
-      if (activeFilter === "Alle") return true;
-      return event.category === activeFilter;
+      if (activeCategory === "Alle") return true;
+      return event.category === activeCategory;
     })
     .filter((event) => {
       if (!searchTerm) return true;
@@ -74,8 +82,8 @@ function App() {
     setSearchTerm(term);
   };
 
-  const handleFilterChange = (category: string) => {
-    setActiveFilter(category);
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
   };
 
   const renderContent = () => {
@@ -100,11 +108,12 @@ function App() {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
+            <CommunitySuggestions communities={suggestedCommunities} title="Community-Vorschläge" />
             <EventFeed
               events={filteredEvents}
               categories={categories}
-              activeFilter={activeFilter}
-              onFilterChange={handleFilterChange}
+              activeCategory={activeCategory}
+              onCategoryChange={handleCategoryChange}
             />
           </>
         );
@@ -126,8 +135,8 @@ function App() {
               <EventFeed
                 events={filteredEvents}
                 categories={categories}
-                activeFilter={activeFilter}
-                onFilterChange={handleFilterChange}
+                activeCategory={activeCategory}
+                onCategoryChange={handleCategoryChange}
               />
             ) : (
               <div className="text-center text-muted-foreground mt-8">
@@ -142,6 +151,7 @@ function App() {
             <h1 className="text-3xl font-bold font-headline tracking-tight md:text-4xl mb-6">
               Communities & Chats
             </h1>
+            <CommunitySuggestions communities={suggestedCommunities} title="Community-Vorschläge" />
             <CommunityFeed communities={communities} />
           </div>
         );
@@ -159,7 +169,7 @@ function App() {
                 Event-Karte von <span className="text-primary">Halle</span>
               </h1>
             </div>
-            <EventMap events={filteredEvents} />
+            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />
           </>
         );
       default:
@@ -167,8 +177,8 @@ function App() {
           <EventFeed
             events={filteredEvents}
             categories={categories}
-            activeFilter={activeFilter}
-            onFilterChange={handleFilterChange}
+            activeCategory={activeCategory}
+            onCategoryChange={handleCategoryChange}
           />
         );
     }

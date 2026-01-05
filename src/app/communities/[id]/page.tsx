@@ -26,7 +26,6 @@ export default function CommunityPage() {
     id: 'user-1',
     name: 'Alice',
     avatarUrl: 'https://github.com/shadcn.png',
-    profileStatus: 'public',
   } as User;
 
   useEffect(() => {
@@ -45,7 +44,7 @@ export default function CommunityPage() {
   }, [params.id]);
 
   if (!community) {
-    return <div className="text-center text-muted-foreground mt-8">Community nicht gefunden.</div>;
+    return <div className="text-center text-muted-foreground mt-8">Community wird geladen oder wurde nicht gefunden...</div>;
   }
 
   return (
@@ -58,7 +57,7 @@ export default function CommunityPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content: Chat */}
             <div className="lg:col-span-2">
-                <Card className="overflow-hidden h-[80vh]">
+                <Card className="overflow-hidden h-[80vh] flex flex-col">
                      <div className="relative h-48 w-full">
                         <Image
                         src={community.imageUrl}
@@ -72,7 +71,8 @@ export default function CommunityPage() {
                         <p className="text-muted-foreground">{community.description}</p>
                     </CardHeader>
                     <CardContent className="p-0 flex-grow">
-                         <Chat communityId={community.id} currentUser={currentUser} />
+                         {/* Correctly pass the whole community object */}
+                         <Chat community={community} currentUser={currentUser} />
                     </CardContent>
                 </Card>
             </div>
