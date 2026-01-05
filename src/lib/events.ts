@@ -21,6 +21,7 @@ const eventsData: Event[] = [
     duration: 4,
     priority: 2,
     boxOffice: true,
+    studentDiscount: true,
   },
   {
     id: '2',
@@ -56,6 +57,7 @@ const eventsData: Event[] = [
     duration: 6,
     priority: 4,
     boxOffice: true,
+    studentDiscount: true,
   },
   {
     id: '4',
@@ -73,6 +75,7 @@ const eventsData: Event[] = [
     duration: 8,
     priority: 2,
     boxOffice: false,
+    studentDiscount: true,
   },
   {
     id: '5',
@@ -107,6 +110,7 @@ const eventsData: Event[] = [
     duration: 3,
     priority: 2,
     boxOffice: true,
+    studentDiscount: true,
   },
   {
     id: '7',
@@ -123,11 +127,30 @@ const eventsData: Event[] = [
     duration: 3,
     priority: 2,
     boxOffice: true,
+    studentDiscount: true,
   }
 ];
 
 export function getEvents(): Event[] {
-  return eventsData;
+  const sortedEvents = [...eventsData].sort((a, b) => {
+    // Studentenrabatt priorisieren
+    if (a.studentDiscount && !b.studentDiscount) {
+      return -1;
+    }
+    if (!a.studentDiscount && b.studentDiscount) {
+      return 1;
+    }
+
+    // Nach Priorität sortieren (höhere Priorität zuerst)
+    const priorityA = a.priority ?? 0;
+    const priorityB = b.priority ?? 0;
+    if (priorityA !== priorityB) {
+      return priorityB - priorityA;
+    }
+
+    return 0;
+  });
+  return sortedEvents;
 }
 
 export function getEventById(id: string): Event | undefined {

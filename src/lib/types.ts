@@ -13,4 +13,5 @@ export type Event = {
   duration: number; // in hours
   priority?: number;
   boxOffice?: boolean;
+  studentDiscount?: boolean;
 };

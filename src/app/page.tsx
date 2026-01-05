@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Compass, Home as HomeIcon, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function HomePage() {
   const allEvents = getEvents();
@@ -17,20 +19,28 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(allEvents);
   const [activeView, setActiveView] = useState("home");
+  const [studentDiscountFilter, setStudentDiscountFilter] = useState(false);
 
-  const handleSearch = (term: string) => {
+  const handleFilterChange = (term: string, studentDiscount: boolean) => {
     setSearchTerm(term);
-    if (!term) {
-      setFilteredEvents(allEvents);
-    } else {
+    setStudentDiscountFilter(studentDiscount);
+
+    let newFilteredEvents = allEvents;
+
+    if (studentDiscount) {
+      newFilteredEvents = newFilteredEvents.filter(event => event.studentDiscount);
+    }
+
+    if (term) {
       const lowercasedTerm = term.toLowerCase();
-      const newFilteredEvents = allEvents.filter(
+      newFilteredEvents = newFilteredEvents.filter(
         (event) =>
           event.title.toLowerCase().includes(lowercasedTerm) ||
           event.description.toLowerCase().includes(lowercasedTerm)
       );
-      setFilteredEvents(newFilteredEvents);
     }
+    
+    setFilteredEvents(newFilteredEvents);
   };
 
   const renderContent = () => {
@@ -51,8 +61,12 @@ export default function HomePage() {
                   className="w-full rounded-full bg-muted pl-10 pr-4 py-6 text-lg"
                   value={searchTerm}
                   onFocus={() => setActiveView('search')}
-                  onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(e) => handleFilterChange(e.target.value, studentDiscountFilter)}
                 />
+              </div>
+              <div className="flex items-center space-x-2 mb-6">
+                <Checkbox id="student-discount" checked={studentDiscountFilter} onCheckedChange={(checked) => handleFilterChange(searchTerm, checked as boolean)} />
+                <Label htmlFor="student-discount" className="text-lg">Studentenrabatt</Label>
               </div>
             <PriorityLegend />
             <EventFeed events={filteredEvents} categories={categories} />
@@ -68,11 +82,15 @@ export default function HomePage() {
                   placeholder="Suche nach Events..."
                   className="w-full rounded-full bg-muted pl-10 pr-4 py-6 text-lg"
                   value={searchTerm}
-                  onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(e) => handleFilterChange(e.target.value, studentDiscountFilter)}
                   autoFocus
                 />
               </div>
-              {searchTerm ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
+              <div className="flex items-center space-x-2 mb-6">
+                <Checkbox id="student-discount" checked={studentDiscountFilter} onCheckedChange={(checked) => handleFilterChange(searchTerm, checked as boolean)} />
+                <Label htmlFor="student-discount" className="text-lg">Studentenrabatt</Label>
+              </div>
+              {searchTerm || studentDiscountFilter ? ( <><PriorityLegend /><EventFeed events={filteredEvents} categories={categories} /></> ) : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen oder wähle einen Filter, um nach Events zu suchen.</div>}
             </>
         );
       case "recommendations":
