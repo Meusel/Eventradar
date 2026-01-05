@@ -25,3 +25,22 @@ export type Event = {
   extras: string[];
   soldOut: boolean;
 };
+
+export type Community = {
+  id: string;
+  eventId: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  members: string[];
+};
+
+export type ChatMessage = {
+  id: string;
+  communityId: string;
+  userId: string;
+  username: string;
+  avatarUrl: string;
+  text: string;
+  timestamp: Date;
+};
