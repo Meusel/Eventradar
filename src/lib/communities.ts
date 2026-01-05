@@ -39,5 +39,16 @@ export const getCommunities = () => communities;
 
 export const getCommunityById = (id: string) => communities.find((c) => c.id === id);
 
+export const getCommunityByEventId = (eventId: string) => communities.find((c) => c.eventId === eventId);
+
 export const getCommunitiesByEventId = (eventId: string) =>
   communities.filter((c) => c.eventId === eventId);
+
+export const joinCommunity = (communityId: string, userId: string) => {
+  console.log(`User ${userId} joining community ${communityId}`);
+  // In a real app, you would update the database here.
+  const community = communities.find(c => c.id === communityId);
+  if (community && !community.members.includes(userId)) {
+    community.members.push(userId);
+  }
+};
