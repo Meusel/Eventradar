@@ -1,6 +1,6 @@
-"use client";
+'use client';
 import { getEventById } from "@/lib/events";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,6 +13,7 @@ import {
   Clock,
   Map,
   Navigation,
+  Users
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -20,10 +21,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SocialShareButtons from "@/components/social-share-buttons";
 import Header from "@/components/header";
+import { getCommunityByEventId, joinCommunity } from "@/lib/communities";
+import { useState, useEffect } from "react";
 
 export default function EventPage() {
   const params = useParams();
+  const router = useRouter();
   const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
+
+  // Mock current user. In a real app, this would come from your auth solution.
+  const currentUserId = 'user-1';
+
+  const [isMember, setIsMember] = useState(false);
 
   if (!eventId) {
     notFound();
@@ -34,6 +43,22 @@ export default function EventPage() {
   if (!event) {
     notFound();
   }
+
+  const community = getCommunityByEventId(eventId);
+
+  useEffect(() => {
+    if (community) {
+      setIsMember(community.members.includes(currentUserId));
+    }
+  }, [community]);
+
+  const handleJoinCommunity = () => {
+    if (community) {
+      joinCommunity(community.id, currentUserId);
+      setIsMember(true);
+      router.push(`/communities/${community.id}`);
+    }
+  };
 
   const heroImageUrl = "https://picsum.photos/seed/7/1200/400";
   const heroImageHint = "konzert publikum";
@@ -86,6 +111,28 @@ export default function EventPage() {
                 </p>
               </div>
               <div className="space-y-6">
+                {community && (
+                  <div className="rounded-lg border bg-card p-4">
+                    <h3 className="font-semibold flex items-center gap-2 mb-2">
+                      <Users className="h-5 w-5 text-primary" />
+                      Community
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Tritt der Community bei, um dich mit anderen Teilnehmern auszutauschen.
+                    </p>
+                    {isMember ? (
+                      <Button asChild className="w-full">
+                        <Link href={`/communities/${community.id}`}>
+                          Zum Community-Chat
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button onClick={handleJoinCommunity} className="w-full">
+                        Community beitreten
+                      </Button>
+                    )}
+                  </div>
+                )}
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <CalendarDays className="h-5 w-5" />
