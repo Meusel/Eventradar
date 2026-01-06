@@ -13,7 +13,7 @@ const eventsData: Event[] = [
     location: "Palette, Große Ulrichstraße 51, 06108 Halle (Saale)",
     latitude: 51.4833,
     longitude: 11.9667,
-    imageUrl: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/indie-nacht.jpg",
     imageHint: "konzert musik",
     ticketUrl: "#",
     categories: ["Musik", "Konzert"],
@@ -30,6 +30,7 @@ const eventsData: Event[] = [
     extras: ["Online-Tickets", "Abendkasse"],
     soldOut: false,
     duration: 4,
+    attendees: [],
   },
   {
     id: '2',
@@ -41,7 +42,7 @@ const eventsData: Event[] = [
     location: "Kunstmuseum Moritzburg, Friedemann-Bach-Platz 5, 06108 Halle (Saale)",
     latitude: 51.4856,
     longitude: 11.9669,
-    imageUrl: "https://images.unsplash.com/photo-1543439613-796955720b73?q=80&w=2838&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/moderne-kunst.jpg",
     imageHint: "kunstgalerie",
     ticketUrl: "#",
     categories: ["Kunst", "Ausstellung"],
@@ -58,6 +59,7 @@ const eventsData: Event[] = [
     extras: [],
     soldOut: false,
     duration: 3,
+    attendees: [],
   },
   {
     id: '3',
@@ -69,7 +71,7 @@ const eventsData: Event[] = [
     location: "Station Endlos, Willy-Brandt-Straße 78, 06110 Halle (Saale)",
     latitude: 51.4701,
     longitude: 11.9852,
-    imageUrl: "https://images.unsplash.com/photo-1588117305388-c261e2a87a2d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/techno-rave.jpg",
     imageHint: "dj party",
     ticketUrl: "#",
     categories: ["Party", "Musik"],
@@ -86,6 +88,7 @@ const eventsData: Event[] = [
     extras: ["Online-Tickets", "Abendkasse"],
     soldOut: false,
     duration: 6,
+    attendees: [],
   },
   {
     id: '4',
@@ -97,7 +100,7 @@ const eventsData: Event[] = [
     location: "Peißnitzinsel, 06108 Halle",
     latitude: 51.487,
     longitude: 11.956,
-    imageUrl: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/streetball-turnier.jpg",
     imageHint: "bälle sport",
     ticketUrl: "#",
     categories: ["Sport"],
@@ -114,6 +117,7 @@ const eventsData: Event[] = [
     extras: ["Outdoor", "Online-Tickets", "Abendkasse"],
     soldOut: false,
     duration: 8,
+    attendees: [],
   },
   {
     id: '5',
@@ -125,7 +129,7 @@ const eventsData: Event[] = [
     location: "MLU Weinberg Campus, Von-Danckelmann-Platz 1, 06120 Halle",
     latitude: 51.491,
     longitude: 11.934,
-    imageUrl: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/programmier-workshop.jpg",
     imageHint: "programmier workshop",
     ticketUrl: "#",
     categories: ["Workshop", "Bildung", "Veranstaltungen der MLU"],
@@ -142,6 +146,7 @@ const eventsData: Event[] = [
     extras: ["Anmeldung erforderlich"],
     soldOut: false,
     duration: 3,
+    attendees: [],
   },
   {
     id: '6',
@@ -153,7 +158,7 @@ const eventsData: Event[] = [
     location: "Turm, Friedemann-Bach-Platz 5, 06108 Halle (Saale)",
     latitude: 51.4856,
     longitude: 11.9669,
-    imageUrl: "https://images.unsplash.com/photo-1499415479124-73d324915622?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/akustik-open-air.jpg",
     imageHint: "mikrofon und note",
     ticketUrl: "#",
     price: 5,
@@ -170,6 +175,7 @@ const eventsData: Event[] = [
     targetGroups: ["Alle"],
     accessibility: [],
     categories: ["Musik", "Open-Mic"],
+    attendees: [],
   },
   {
     id: '7',
@@ -178,7 +184,7 @@ const eventsData: Event[] = [
     date: '2026-02-25',
     category: 'Musik',
     location: 'Objekt 5, Seebener Straße 5, 06114 Halle (Saale)',
-    imageUrl: '/images/jazz-abend.jpg',
+    imageUrl: '/images/jazzabend.jpg',
     imageHint: 'Jazz-Club-Atmosphäre mit Saxophon',
     ticketUrl: '#',
     price: 12,
@@ -197,6 +203,7 @@ const eventsData: Event[] = [
     targetGroups: ["Erwachsene", "Senioren"],
     accessibility: ["Begrenzt rollstuhlgerecht"],
     extras: ["Bar", "Abendkasse"],
+    attendees: [],
   }
 ];
 
