@@ -1,9 +1,4 @@
-export type User = {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  profileStatus: 'public' | 'private';
-};
+import type { User } from '@/lib/types';
 
 const users: User[] = [
   {
@@ -44,6 +39,6 @@ const users: User[] = [
   },
 ];
 
-export const getUserById = (id: string) => users.find((u) => u.id === id);
+export const getUserById = (id: string): User | undefined => users.find((u) => u.id === id);
 
-export const getUsersByIds = (ids: string[]) => users.filter((u) => ids.includes(u.id));
+export const getUsersByIds = (ids: string[]): User[] => users.filter((u) => ids.includes(u.id));

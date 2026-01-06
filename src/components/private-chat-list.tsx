@@ -1,13 +1,13 @@
 'use client';
 
-import { PrivateChat, getOtherUserInChat } from "@/lib/chats";
+import { PrivateChat, PrivateChatPreview } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
 
 interface PrivateChatListProps {
-  chats: PrivateChat[];
+  chats: PrivateChatPreview[];
   currentUserId: string;
 }
 
@@ -15,8 +15,8 @@ export default function PrivateChatList({ chats, currentUserId }: PrivateChatLis
   return (
     <div className="space-y-2">
       {chats.map((chat) => {
-        const otherUser = getOtherUserInChat(chat, currentUserId);
-        const lastMessage = chat.messages[chat.messages.length - 1];
+        const otherUser = chat.recipient;
+        const lastMessage = chat.lastMessage;
 
         if (!otherUser) return null;
 
@@ -31,12 +31,12 @@ export default function PrivateChatList({ chats, currentUserId }: PrivateChatLis
                   <div className="flex justify-between items-center">
                     <p className="font-semibold truncate">{otherUser.name}</p>
                     <p className="text-xs text-muted-foreground whitespace-nowrap">
-                        {formatDistanceToNow(lastMessage.timestamp, { addSuffix: true, locale: de })}
+                        {formatDistanceToNow(chat.lastUpdated, { addSuffix: true, locale: de })}
                     </p>
                   </div>
                 <p className="text-sm text-muted-foreground truncate">
-                  {lastMessage.senderId === currentUserId && 'Du: '} 
-                  {lastMessage.text}
+                  {/* The sender of the last message is not available in PrivateChatPreview, so we can't show "Du: " */}
+                  {lastMessage}
                 </p>
               </div>
             </div>
