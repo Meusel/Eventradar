@@ -5,10 +5,11 @@ import dynamic from 'next/dynamic';
 import Header from '@/components/header';
 import EventFeed from '@/components/event-feed';
 import AiRecommendations from '@/components/ai-recommendations';
+import CalendarPage from './calendar/page';
 import { getEvents } from '@/lib/events';
 import type { Event } from '@/lib/types';
 import { Input } from '@/components/ui/input';
-import { Compass, Home as HomeIcon, Search, Sparkles } from 'lucide-react';
+import { Calendar, Compass, Home as HomeIcon, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSearchParams } from 'next/navigation';
 
@@ -120,6 +121,8 @@ export default function App() {
               {searchTerm ? <EventFeed events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} /> : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
             </>
         );
+      case 'calendar':
+        return <CalendarPage />;
       case 'recommendations':
         return (
           <div className="w-full">
@@ -160,6 +163,10 @@ export default function App() {
             <Button variant="ghost" onClick={() => setActiveView('search')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'search' ? 'text-primary' : ''}`}>
                 <Search className="h-6 w-6"/>
                 <span className="text-xs">Suche</span>
+            </Button>
+            <Button variant="ghost" onClick={() => setActiveView('calendar')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'calendar' ? 'text-primary' : ''}`}>
+                <Calendar className="h-6 w-6"/>
+                <span className="text-xs">Kalender</span>
             </Button>
             <Button variant="ghost" onClick={() => setActiveView('recommendations')} className={`flex flex-col h-full justify-center gap-1 ${activeView === 'recommendations' ? 'text-primary' : ''}`}>
                 <Sparkles className="h-6 w-6"/>

@@ -13,7 +13,8 @@ import {
   Clock,
   Map,
   Navigation,
-  Users
+  Users,
+  PlusCircle
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -23,6 +24,7 @@ import SocialShareButtons from "@/components/social-share-buttons";
 import Header from "@/components/header";
 import { getCommunityByEventId, joinCommunity } from "@/lib/communities";
 import { useState, useEffect } from "react";
+import { Event } from "@/lib/types";
 
 export default function EventPage() {
   const params = useParams();
@@ -33,6 +35,7 @@ export default function EventPage() {
   const currentUserId = 'user-1';
 
   const [isMember, setIsMember] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   if (!eventId) {
     notFound();
@@ -43,6 +46,11 @@ export default function EventPage() {
   if (!event) {
     notFound();
   }
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
+    setIsFavorite(favorites.some((fav: Event) => fav.id === eventId));
+  }, [eventId]);
 
   const community = getCommunityByEventId(eventId);
 
@@ -57,6 +65,21 @@ export default function EventPage() {
       joinCommunity(community.id, currentUserId);
       setIsMember(true);
       router.push(`/communities/${community.id}`);
+    }
+  };
+  
+  const handleAddToCalendar = () => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
+    if (isFavorite) {
+        // Remove from favorites
+        const newFavorites = favorites.filter((fav: Event) => fav.id !== eventId);
+        localStorage.setItem('favoriteEvents', JSON.stringify(newFavorites));
+        setIsFavorite(false);
+    } else {
+        // Add to favorites
+        const newFavorites = [...favorites, event];
+        localStorage.setItem('favoriteEvents', JSON.stringify(newFavorites));
+        setIsFavorite(true);
     }
   };
 
@@ -201,6 +224,10 @@ export default function EventPage() {
                     </p>
                   </div>
                 </div>
+                <Button onClick={handleAddToCalendar} size="lg" variant="outline" className="w-full">
+                  <PlusCircle className="mr-2 h-5 w-5" />
+                  {isFavorite ? 'Vom Kalender entfernen' : 'Zum Kalender hinzufügen'}
+                </Button>
                 <Button asChild size="lg" variant="accent" className="w-full">
                   <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer">
                     <Ticket className="mr-2 h-5 w-5" />
