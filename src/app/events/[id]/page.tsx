@@ -96,6 +96,16 @@ export default function EventPage() {
     window.open(url, '_blank');
   };
 
+  const handleShowOnMap = () => {
+    if (!event) return;
+    const address = encodeURIComponent(event.location);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS
+      ? `maps://?q=${address}`
+      : `https://www.google.com/maps/search/?api=1&query=${address}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
@@ -180,11 +190,9 @@ export default function EventPage() {
                       {event.location}
                     </p>
                     <div className="mt-2 flex flex-col space-y-2">
-                        <Button asChild size="sm" variant="outline">
-                            <Link href={`/?eventId=${event.id}`}>
-                                <Map className="mr-2 h-4 w-4"/>
-                                Auf Karte anzeigen
-                            </Link>
+                        <Button size="sm" variant="outline" onClick={handleShowOnMap}>
+                            <Map className="mr-2 h-4 w-4"/>
+                            Auf Karte anzeigen
                         </Button>
                         <Button size="sm" variant="outline" onClick={handleGetDirections}>
                             <Navigation className="mr-2 h-4 w-4"/>
