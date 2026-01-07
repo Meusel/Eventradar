@@ -60,9 +60,6 @@ export default function EventPage() {
     }
   };
 
-  const heroImageUrl = "https://picsum.photos/seed/7/1200/400";
-  const heroImageHint = "konzert publikum";
-
  const handleGetDirections = () => {
     if (!event) return;
     const address = encodeURIComponent(event.location);
@@ -87,9 +84,9 @@ export default function EventPage() {
           <div className="overflow-hidden rounded-lg bg-card shadow-lg">
             <div className="relative h-64 w-full md:h-80">
               <Image
-                src={heroImageUrl}
+                src={event.imageUrl}
                 alt={event.title}
-                data-ai-hint={heroImageHint}
+                data-ai-hint={event.imageHint}
                 fill
                 className="object-cover"
                 priority
