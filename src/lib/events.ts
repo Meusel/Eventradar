@@ -30,6 +30,7 @@ const eventsData: Event[] = [
     extras: ["Online-Tickets", "Abendkasse"],
     soldOut: false,
     duration: 4,
+    priority: 'Top-Event',
   },
   {
     id: '2',
@@ -58,6 +59,7 @@ const eventsData: Event[] = [
     extras: [],
     soldOut: false,
     duration: 3,
+    priority: 'Empfohlen',
   },
   {
     id: '3',
@@ -86,6 +88,7 @@ const eventsData: Event[] = [
     extras: ["Online-Tickets", "Abendkasse"],
     soldOut: false,
     duration: 6,
+    priority: 'Top-Event',
   },
   {
     id: '4',
@@ -114,6 +117,7 @@ const eventsData: Event[] = [
     extras: ["Outdoor", "Online-Tickets", "Abendkasse"],
     soldOut: false,
     duration: 8,
+    priority: 'Top-Event',
   },
   {
     id: '5',
@@ -142,6 +146,7 @@ const eventsData: Event[] = [
     extras: ["Anmeldung erforderlich"],
     soldOut: false,
     duration: 3,
+    priority: 'Empfohlen',
   },
   {
     id: '6',
@@ -170,6 +175,7 @@ const eventsData: Event[] = [
     targetGroups: ["Alle"],
     accessibility: [],
     categories: ["Musik", "Open-Mic"],
+    priority: 'Empfohlen',
   },
   {
     id: '7',
@@ -197,6 +203,7 @@ const eventsData: Event[] = [
     targetGroups: ["Erwachsene", "Senioren"],
     accessibility: ["Begrenzt rollstuhlgerecht"],
     extras: ["Bar", "Abendkasse"],
+    priority: 'Empfohlen',
   }
 ];
 

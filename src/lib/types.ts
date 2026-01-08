@@ -25,6 +25,7 @@ export type Event = {
   extras: string[];
   soldOut: boolean;
   attendees: string[];
+  priority?: 'Top-Event' | 'Empfohlen' | null;
 };
 
 export type Community = {
