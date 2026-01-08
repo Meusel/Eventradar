@@ -13,7 +13,8 @@ import {
   Clock,
   Map,
   Navigation,
-  Users
+  Users,
+  PlusCircle
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -23,6 +24,7 @@ import SocialShareButtons from "@/components/social-share-buttons";
 import Header from "@/components/header";
 import { getCommunityByEventId, joinCommunity } from "@/lib/communities";
 import { useState, useEffect } from "react";
+import { Event } from "@/lib/types";
 
 export default function EventPage() {
   const params = useParams();
@@ -33,6 +35,7 @@ export default function EventPage() {
   const currentUserId = 'user-1';
 
   const [isMember, setIsMember] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   if (!eventId) {
     notFound();
@@ -43,6 +46,11 @@ export default function EventPage() {
   if (!event) {
     notFound();
   }
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
+    setIsFavorite(favorites.some((fav: Event) => fav.id === eventId));
+  }, [eventId]);
 
   const community = getCommunityByEventId(eventId);
 
@@ -59,6 +67,21 @@ export default function EventPage() {
       router.push(`/communities/${community.id}`);
     }
   };
+  
+  const handleAddToCalendar = () => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
+    if (isFavorite) {
+        // Remove from favorites
+        const newFavorites = favorites.filter((fav: Event) => fav.id !== eventId);
+        localStorage.setItem('favoriteEvents', JSON.stringify(newFavorites));
+        setIsFavorite(false);
+    } else {
+        // Add to favorites
+        const newFavorites = [...favorites, event];
+        localStorage.setItem('favoriteEvents', JSON.stringify(newFavorites));
+        setIsFavorite(true);
+    }
+  };
 
   const heroImageUrl = "https://picsum.photos/seed/7/1200/400";
   const heroImageHint = "konzert publikum";
@@ -70,6 +93,16 @@ export default function EventPage() {
     const url = isIOS
       ? `maps://?q=${address}`
       : `https://www.google.com/maps/dir/?api=1&destination=${address}`;
+    window.open(url, '_blank');
+  };
+
+  const handleShowOnMap = () => {
+    if (!event) return;
+    const address = encodeURIComponent(event.location);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS
+      ? `maps://?q=${address}`
+      : `https://www.google.com/maps/search/?api=1&query=${address}`;
     window.open(url, '_blank');
   };
 
@@ -157,11 +190,9 @@ export default function EventPage() {
                       {event.location}
                     </p>
                     <div className="mt-2 flex flex-col space-y-2">
-                        <Button asChild size="sm" variant="outline">
-                            <Link href={`/?eventId=${event.id}`}>
-                                <Map className="mr-2 h-4 w-4"/>
-                                Auf Karte anzeigen
-                            </Link>
+                        <Button size="sm" variant="outline" onClick={handleShowOnMap}>
+                            <Map className="mr-2 h-4 w-4"/>
+                            Auf Karte anzeigen
                         </Button>
                         <Button size="sm" variant="outline" onClick={handleGetDirections}>
                             <Navigation className="mr-2 h-4 w-4"/>
@@ -201,6 +232,10 @@ export default function EventPage() {
                     </p>
                   </div>
                 </div>
+                <Button onClick={handleAddToCalendar} size="lg" variant="outline" className="w-full">
+                  <PlusCircle className="mr-2 h-5 w-5" />
+                  {isFavorite ? 'Vom Kalender entfernen' : 'Zum Kalender hinzufügen'}
+                </Button>
                 <Button asChild size="lg" variant="accent" className="w-full">
                   <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer">
                     <Ticket className="mr-2 h-5 w-5" />
