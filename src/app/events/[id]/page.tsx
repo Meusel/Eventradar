@@ -176,7 +176,7 @@ export default function EventPage() {
                       {format(new Date(event.date), "EEEE, dd. MMMM yyyy", { locale: de })}
                     </p>
                     <p className="text-sm text-foreground/80">
-                      Beginnt um {event.time.start} Uhr
+                      Beginnt um {format(new Date(event.time.start), "HH:mm", { locale: de })} Uhr
                     </p>
                   </div>
                 </div>
