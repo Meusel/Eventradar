@@ -6,6 +6,7 @@ import EventCard from './event-card';
 import { Button } from './ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +25,7 @@ type EventFeedProps = {
 export default function EventFeed({ events, categories, activeCategory, onCategoryChange }: EventFeedProps) {
   const [price, setPrice] = useState(50);
   const [duration, setDuration] = useState(12);
+  const [studentDiscount, setStudentDiscount] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -31,10 +33,20 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
   }, []);
 
   const filteredEvents = useMemo(() => {
-    // The parent component is now responsible for category filtering.
-    // This component only applies its own internal filters for price and duration.
-    return events.filter(event => event.price <= price && event.duration <= duration);
-  }, [events, price, duration]);
+    return events
+      .filter(event => 
+        event.price <= price && 
+        event.duration <= duration &&
+        (!studentDiscount || event.studentDiscount)
+      )
+      .sort((a, b) => {
+        if (a.price === 0 && b.price !== 0) return -1;
+        if (a.price !== 0 && b.price === 0) return 1;
+        if (a.studentDiscount && !b.studentDiscount) return -1;
+        if (!a.studentDiscount && b.studentDiscount) return 1;
+        return 0;
+      });
+  }, [events, price, duration, studentDiscount]);
 
   if (!isClient) {
     return null; // or a loading skeleton
@@ -93,6 +105,15 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
                   value={[duration]}
                   onValueChange={(value) => setDuration(value[0])}
                 />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="student-discount" checked={studentDiscount} onCheckedChange={(checked) => setStudentDiscount(Boolean(checked))} />
+                <label
+                  htmlFor="student-discount"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Studentenrabatt
+                </label>
               </div>
             </div>
           </AccordionContent>
