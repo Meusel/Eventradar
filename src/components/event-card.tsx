@@ -75,7 +75,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
 
         <div className="mt-4 flex items-center justify-between gap-2">
             <div className='flex-shrink-0'>
-                <span className="text-lg font-bold">{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
+                <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
                 {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
             </div>
 
