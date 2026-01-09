@@ -7,12 +7,15 @@ import {
   MapPin,
   Ticket,
   MessageSquare,
+  PlusCircle,
+  CheckCircle,
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { getCategoryColor } from '@/lib/category-colors';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { getCommunitiesByEventId } from '@/lib/communities';
+import { useState, useEffect } from 'react';
 
 interface EventCardProps {
   event: Event;
@@ -22,10 +25,32 @@ interface EventCardProps {
 export default function EventCard({ event, priority = false }: EventCardProps) {
   const categoryColor = getCategoryColor(event.category);
   const communities = getCommunitiesByEventId(event.id);
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
+    setIsSaved(savedEvents.some((savedEvent: Event) => savedEvent.id === event.id));
+  }, [event.id]);
+
+  const handleAddToCalendar = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
+    const eventIndex = savedEvents.findIndex((savedEvent: Event) => savedEvent.id === event.id);
+
+    if (eventIndex > -1) {
+      savedEvents.splice(eventIndex, 1);
+      setIsSaved(false);
+    } else {
+      savedEvents.push(event);
+      setIsSaved(true);
+    }
+    localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+  };
 
   const handleTicketClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    e.preventDefault(); 
+    e.stopPropagation();
+    e.preventDefault();
     window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -51,6 +76,18 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
           >
             {event.category}
           </Badge>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-2 left-2 h-8 w-8 rounded-full bg-background/80 text-foreground hover:bg-background"
+            onClick={handleAddToCalendar}
+          >
+            {isSaved ? (
+              <CheckCircle className="h-5 w-5 text-primary" />
+            ) : (
+              <PlusCircle className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </Link>
       <div className="p-4 flex flex-col flex-grow">
