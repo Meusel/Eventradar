@@ -28,7 +28,7 @@ const users: User[] = [
   {
     id: 'user-5',
     name: 'Eva',
-    avatarUrl: 'https://github.com/eva.png',
+    avatarUrl: 'https/github.com/eva.png',
     profileStatus: 'private',
   },
     {
@@ -37,8 +37,16 @@ const users: User[] = [
     avatarUrl: 'https://github.com/frank.png',
     profileStatus: 'public',
   },
+  {
+    id: 'user-basto',
+    name: 'Basto',
+    avatarUrl: 'https://github.com/basto.png',
+    profileStatus: 'public',
+  },
 ];
 
 export const getUserById = (id: string): User | undefined => users.find((u) => u.id === id);
 
 export const getUsersByIds = (ids: string[]): User[] => users.filter((u) => ids.includes(u.id));
+
+export type { User };

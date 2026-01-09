@@ -34,6 +34,7 @@ export type Community = {
   description: string;
   imageUrl: string;
   members: string[];
+  organizerId: string;
 };
 
 export type User = {

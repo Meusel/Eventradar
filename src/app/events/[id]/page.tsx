@@ -22,14 +22,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SocialShareButtons from "@/components/social-share-buttons";
 import Header from "@/components/header";
-import { getCommunityByEventId, joinCommunity } from "@/lib/communities";
+import { getCommunityByEventId, updateCommunity } from "@/lib/communities";
 import { useState, useEffect } from "react";
 import { Event } from "@/lib/types";
 
 export default function EventPage() {
   const params = useParams();
   const router = useRouter();
-  const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const eventId = params ? (Array.isArray(params.id) ? params.id[0] : params.id) : null;
 
   // Mock current user. In a real app, this would come from your auth solution.
   const currentUserId = 'user-1';
@@ -62,7 +62,11 @@ export default function EventPage() {
 
   const handleJoinCommunity = () => {
     if (community) {
-      joinCommunity(community.id, currentUserId);
+      const updatedCommunity = {
+        ...community,
+        members: [...community.members, currentUserId]
+      };
+      updateCommunity(updatedCommunity);
       setIsMember(true);
       router.push(`/communities/${community.id}`);
     }
