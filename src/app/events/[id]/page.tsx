@@ -29,7 +29,7 @@ import { Event } from "@/lib/types";
 export default function EventPage() {
   const params = useParams();
   const router = useRouter();
-  const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const eventId = Array.isArray(params?.id) ? params?.id[0] : params?.id;
 
   // Mock current user. In a real app, this would come from your auth solution.
   const currentUserId = 'user-1';
@@ -178,7 +178,7 @@ export default function EventPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-.full bg-primary/10 text-primary">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>

@@ -24,8 +24,8 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
   const communities = getCommunitiesByEventId(event.id);
 
   const handleTicketClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    e.preventDefault(); 
+    e.stopPropagation();
+    e.preventDefault();
     window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -73,31 +73,38 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="mt-4 flex items-end justify-between gap-2">
             <div className='flex-shrink-0'>
                 <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
                 {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
             </div>
 
-            <div className="flex gap-2">
-              {communities.length > 0 && (
-                <Button asChild size="sm" variant="outline">
-                  <Link href={`/communities/${communities[0].id}`}>
-                    <MessageSquare className="h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
+            <div className="text-right">
+                <div className="flex gap-2 justify-end">
+                  {communities.length > 0 && (
+                    <Button asChild size="sm" variant="outline">
+                      <Link href={`/communities/${communities[0].id}`}>
+                        <MessageSquare className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
 
-              <Button asChild size="sm">
-                <a
-                  href={event.ticketUrl}
-                  onClick={handleTicketClick}
-                  className="flex items-center gap-2"
-                >
-                  <Ticket className="h-4 w-4" />
-                  <span>Tickets</span>
-                </a>
-              </Button>
+                  <Button asChild size="sm">
+                    <a
+                      href={event.ticketUrl}
+                      onClick={handleTicketClick}
+                      className="flex items-center gap-2"
+                    >
+                      <Ticket className="h-4 w-4" />
+                      <span>Tickets</span>
+                    </a>
+                  </Button>
+                </div>
+                {event.boxOffice && (
+                    <div className="mt-1 text-xs text-muted-foreground">
+                        Abendkasse möglich
+                    </div>
+                )}
             </div>
         </div>
       </div>

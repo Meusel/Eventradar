@@ -31,6 +31,7 @@ const eventsData: Event[] = [
     soldOut: false,
     duration: 4,
     attendees: [],
+    boxOffice: true,
   },
   {
     id: '2',
@@ -89,6 +90,7 @@ const eventsData: Event[] = [
     soldOut: false,
     duration: 6,
     attendees: [],
+    boxOffice: true,
   },
   {
     id: '4',
@@ -176,6 +178,7 @@ const eventsData: Event[] = [
     accessibility: [],
     categories: ["Musik", "Open-Mic"],
     attendees: [],
+    boxOffice: true,
   },
   {
     id: '7',

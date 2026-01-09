@@ -16,6 +16,7 @@ interface EventMapProps {
   events: Event[];
   categories: string[];
   onFilterChange: (category: string) => void;
+  activeCategory: string;
   selectedEventId?: string | null;
 }
 
@@ -75,7 +76,7 @@ const MapEvents = memo(({ events, location, selectedEvent, markerRefs, handleMor
                 </Marker>
             )}
             {events
-                .filter(event => typeof event.latitude === 'number' && typeof event.longitude === 'number')
+                .filter((event: Event) => typeof event.latitude === 'number' && typeof event.longitude === 'number')
                 .map((event: Event) => {
                 const distance = location ? calculateDistance(location.latitude, location.longitude, event.latitude, event.longitude).toFixed(2) : null;
                 return (
@@ -109,8 +110,7 @@ const MapEvents = memo(({ events, location, selectedEvent, markerRefs, handleMor
 });
 MapEvents.displayName = 'MapEvents';
 
-const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange, selectedEventId }) => {
-  const [activeCategory, setActiveCategory] = useState('Alle');
+const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange, activeCategory, selectedEventId }) => {
   const { location } = useUserLocation();
   const router = useRouter();
   const markerRefs = useRef<{ [key: string]: LeafletMarker | null }>({});
@@ -134,7 +134,6 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange,
   }
 
   const handleCategoryChange = (category: string) => {
-    setActiveCategory(category);
     onFilterChange(category);
   }
 

@@ -26,10 +26,11 @@ export default function CommunityPage() {
     id: 'user-1',
     name: 'Alice',
     avatarUrl: 'https://github.com/shadcn.png',
+    profileStatus: 'public',
   } as User;
 
   useEffect(() => {
-    if (params.id) {
+    if (params?.id) {
       const foundCommunity = getCommunityById(params.id as string);
       if (foundCommunity) {
         setCommunity(foundCommunity);
@@ -41,7 +42,7 @@ export default function CommunityPage() {
         setCommunity(null);
       }
     }
-  }, [params.id]);
+  }, [params?.id]);
 
   if (!community) {
     return <div className="text-center text-muted-foreground mt-8">Community wird geladen oder wurde nicht gefunden...</div>;
