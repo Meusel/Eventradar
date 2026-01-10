@@ -1,6 +1,6 @@
 'use client';
 import { getEventById } from "@/lib/events";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -29,6 +29,7 @@ import { Event } from "@/lib/types";
 export default function EventPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const eventId = params ? (Array.isArray(params.id) ? params.id[0] : params.id) : null;
 
   // Mock current user. In a real app, this would come from your auth solution.
@@ -36,6 +37,14 @@ export default function EventPage() {
 
   const [isMember, setIsMember] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [backHref, setBackHref] = useState("/");
+
+  useEffect(() => {
+    const from = searchParams?.get("from");
+    if (from === "map") {
+      setBackHref("/discover");
+    }
+  }, [searchParams]);
 
   if (!eventId) {
     notFound();
@@ -113,9 +122,9 @@ export default function EventPage() {
       <main className="flex-1 bg-background pb-16">
         <div className="container mx-auto max-w-4xl px-4 py-8">
           <Button asChild variant="ghost" className="mb-6">
-            <Link href="/">
+            <Link href={backHref}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Zurück zu allen Events
+              Zurück
             </Link>
           </Button>
           <div className="overflow-hidden rounded-lg bg-card shadow-lg">

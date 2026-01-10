@@ -86,3 +86,15 @@ export const getCommunitiesByEventId = (eventId: string) => {
     communities = getCommunitiesFromStorage();
     return communities.filter((c) => c.eventId === eventId);
 }
+
+export const joinCommunity = (communityId: string, userId: string) => {
+  communities = getCommunitiesFromStorage();
+  const community = communities.find(c => c.id === communityId);
+
+  if (community && !community.members.includes(userId)) {
+    community.members.push(userId);
+    saveCommunitiesToStorage();
+  }
+  
+  return communities;
+};
