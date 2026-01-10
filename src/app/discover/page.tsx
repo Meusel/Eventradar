@@ -6,6 +6,7 @@ import { getEvents } from "@/lib/events";
 import type { Event } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import BottomNav from "@/components/bottom-nav";
 
 // Dynamically import EventMap with SSR disabled
 const EventMap = dynamic(() => import("@/components/event-map"), { 
@@ -64,7 +65,7 @@ function App() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
-      <main className="flex-1 bg-background">
+      <main className="flex-1 bg-background pb-24">
         <div className="container mx-auto max-w-7xl px-4 py-8">
             <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <h1 className="text-3xl font-bold font-headline tracking-tight md:text-4xl">
@@ -84,6 +85,7 @@ function App() {
             <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />
         </div>
       </main>
+      <BottomNav />
     </div>
   );
 }

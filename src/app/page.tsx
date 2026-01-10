@@ -7,20 +7,15 @@ import AiRecommendations from "@/components/ai-recommendations";
 import { getEvents } from "@/lib/events";
 import type { Event } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import PriorityLegend from "@/components/priority-legend";
 import CommunityFeed from "@/components/community-feed";
 import { getCommunities } from "@/lib/communities";
 import type { Community } from "@/lib/types";
 import { getCommunitySuggestions } from "@/lib/community-suggestions";
 import CommunitySuggestions from "@/components/community-suggestions";
-
-// Dynamically import EventMap with SSR disabled
-const EventMap = dynamic(() => import("@/components/event-map"), { 
-  ssr: false, 
-  loading: () => <div className="text-center text-muted-foreground mt-8">Karte wird geladen...</div>
-});
+import BottomNav from "@/components/bottom-nav";
+import { useSearchParams } from "next/navigation";
 
 // Dynamically import CookieConsent
 const CookieConsent = dynamic(() => import("@/components/cookie-consent"), { ssr: false });
@@ -62,7 +57,8 @@ function App() {
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeView, setActiveView] = useState("home");
+  const searchParams = useSearchParams();
+  const activeView = searchParams?.get('view') || 'home';
 
   const filteredEvents = allEvents
     .filter((event) => {
@@ -104,7 +100,6 @@ function App() {
                 placeholder="Suche nach Events..."
                 className="w-full rounded-full bg-muted pl-10 pr-4 py-6 text-lg"
                 value={searchTerm}
-                onFocus={() => setActiveView("search")}
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
@@ -161,17 +156,6 @@ function App() {
             <AiRecommendations />
           </div>
         );
-      case "discover":
-        return (
-          <>
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <h1 className="text-3xl font-bold font-headline tracking-tight md:text-4xl">
-                Event-Karte von <span className="text-primary">Halle</span>
-              </h1>
-            </div>
-            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />
-          </>
-        );
       default:
         return (
           <EventFeed
@@ -192,60 +176,7 @@ function App() {
           {renderContent()}
         </div>
       </main>
-      <footer className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <nav className="container mx-auto flex h-16 max-w-7xl items-center justify-around px-4">
-          <Button
-            variant="ghost"
-            onClick={() => setActiveView("home")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "home" ? "text-primary" : ""
-            }`}
-          >
-            <HomeIcon className="h-6 w-6" />
-            <span className="text-xs">Home</span>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveView("search")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "search" ? "text-primary" : ""
-            }`}
-          >
-            <Search className="h-6 w-6" />
-            <span className="text-xs">Suche</span>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveView("chat")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "chat" ? "text-primary" : ""
-            }`}
-          >
-            <MessageSquare className="h-6 w-6" />
-            <span className="text-xs">Chat</span>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveView("recommendations")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "recommendations" ? "text-primary" : ""
-            }`}
-          >
-            <Sparkles className="h-6 w-6" />
-            <span className="text-xs">Für Dich</span>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveView("discover")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "discover" ? "text-primary" : ""
-            }`}
-          >
-            <Compass className="h-6 w-6" />
-            <span className="text-xs">Entdecken</span>
-          </Button>
-        </nav>
-      </footer>
+      <BottomNav />
     </div>
   );
 }
