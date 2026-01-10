@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getCommunityById } from '@/lib/communities';
+import { getCommunityById, updateCommunity } from '@/lib/communities';
 import { getEventById } from '@/lib/events';
 import { getUsersByIds, User } from '@/lib/users';
 import type { Community, Event } from '@/lib/types';
@@ -21,16 +21,14 @@ export default function CommunityPage() {
   const [event, setEvent] = useState<Event | null>(null);
   const [members, setMembers] = useState<User[]>([]);
 
-  // Mock current user. In a real app, this would come from your auth solution.
   const currentUser = {
-    id: 'user-1',
-    name: 'Alice',
-    avatarUrl: 'https://github.com/shadcn.png',
-    profileStatus: 'public',
+    id: 'user-ronny',
+    name: 'Ronny Müller',
+    avatarUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop',
   } as User;
 
   useEffect(() => {
-    if (params?.id) {
+    if (params && params.id) {
       const foundCommunity = getCommunityById(params.id as string);
       if (foundCommunity) {
         setCommunity(foundCommunity);
@@ -42,11 +40,33 @@ export default function CommunityPage() {
         setCommunity(null);
       }
     }
-  }, [params?.id]);
+  }, [params]);
+
+  const handleToggleMembership = () => {
+    if (!community) return;
+
+    const isMember = community.members.includes(currentUser.id);
+    let updatedMembers;
+
+    if (isMember) {
+      updatedMembers = community.members.filter((memberId) => memberId !== currentUser.id);
+    } else {
+      updatedMembers = [...community.members, currentUser.id];
+    }
+
+    const updatedCommunityData = { ...community, members: updatedMembers };
+    updateCommunity(updatedCommunityData);
+    setCommunity(updatedCommunityData);
+
+    const updatedMemberDetails = getUsersByIds(updatedMembers);
+    setMembers(updatedMemberDetails);
+  };
 
   if (!community) {
     return <div className="text-center text-muted-foreground mt-8">Community wird geladen oder wurde nicht gefunden...</div>;
   }
+
+  const isMember = community.members.includes(currentUser.id);
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -56,7 +76,6 @@ export default function CommunityPage() {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content: Chat */}
             <div className="lg:col-span-2">
                 <Card className="overflow-hidden h-[80vh] flex flex-col">
                      <div className="relative h-48 w-full">
@@ -68,17 +87,22 @@ export default function CommunityPage() {
                         />
                     </div>
                     <CardHeader className="border-b">
-                        <CardTitle className="text-3xl font-headline">{community.name}</CardTitle>
-                        <p className="text-muted-foreground">{community.description}</p>
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <CardTitle className="text-3xl font-headline">{community.name}</CardTitle>
+                                <p className="text-muted-foreground mt-1">{community.description}</p>
+                            </div>
+                            <Button onClick={handleToggleMembership} className="ml-4 flex-shrink-0">
+                                {isMember ? 'Austreten' : 'Community beitreten'}
+                            </Button>
+                        </div>
                     </CardHeader>
                     <CardContent className="p-0 flex-grow">
-                         {/* Correctly pass the whole community object */}
                          <Chat community={community} currentUser={currentUser} />
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Sidebar: Event Info & Members */}
             <div className="space-y-8">
                 {event && (
                     <Card>
@@ -118,7 +142,7 @@ export default function CommunityPage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <MemberList members={members} />
+                        <MemberList members={members} organizerId={community.organizerId} currentUser={currentUser} />
                     </CardContent>
                 </Card>
             </div>

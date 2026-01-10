@@ -37,6 +37,12 @@ const users: User[] = [
     avatarUrl: 'https://github.com/frank.png',
     profileStatus: 'public',
   },
+  {
+    id: 'user-basto',
+    name: 'Basto',
+    avatarUrl: 'https://github.com/basto.png',
+    profileStatus: 'public',
+  },
 ];
 
 export const getUserById = (id: string): User | undefined => users.find((u) => u.id === id);

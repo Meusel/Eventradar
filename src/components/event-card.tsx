@@ -7,12 +7,17 @@ import {
   MapPin,
   Ticket,
   MessageSquare,
+  Flame,
+  Star,
+  PlusCircle,
+  CheckCircle,
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { getCategoryColor } from '@/lib/category-colors';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { getCommunitiesByEventId } from '@/lib/communities';
+import { useState, useEffect } from 'react';
 
 interface EventCardProps {
   event: Event;
@@ -22,12 +27,65 @@ interface EventCardProps {
 export default function EventCard({ event, priority = false }: EventCardProps) {
   const categoryColor = getCategoryColor(event.category);
   const communities = getCommunitiesByEventId(event.id);
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
+    setIsSaved(savedEvents.some((savedEvent: Event) => savedEvent.id === event.id));
+  }, [event.id]);
+
+  const handleAddToCalendar = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const savedEvents = JSON.parse(localStorage.getItem('savedEvents') || '[]');
+    const eventIndex = savedEvents.findIndex((savedEvent: Event) => savedEvent.id === event.id);
+
+    if (eventIndex > -1) {
+      savedEvents.splice(eventIndex, 1);
+      setIsSaved(false);
+    } else {
+      savedEvents.push(event);
+      setIsSaved(true);
+    }
+    localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+  };
 
   const handleTicketClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
   };
+
+  const renderPrice = () => {
+    // Check if a student discount is applicable and the student price is a valid number.
+    const isStudentDiscountApplicable = event.studentDiscount && typeof event.studentPrice === 'number';
+
+    if (isStudentDiscountApplicable) {
+      return (
+        <div className="flex items-baseline gap-2">
+          {/* Display student price, with special styling for free events */}
+          <span className={`text-lg font-bold ${event.studentPrice === 0 ? 'text-green-500 animate-pulse' : ''}`}>
+            {event.studentPrice > 0 ? `${event.studentPrice} €` : 'Kostenlos'}
+          </span>
+          {/* Display original price, struck through */}
+          <span className="text-sm text-muted-foreground line-through">
+            {`${event.price} €`}
+          </span>
+        </div>
+      );
+    }
+
+    // Fallback to the regular price display if no student discount is available.
+    return (
+      <div>
+        <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>
+            {event.price > 0 ? `${event.price} €` : 'Kostenlos'}
+        </span>
+        {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
+      </div>
+    );
+  };
+
 
   return (
     <div className="group block h-full rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:shadow-lg">
@@ -42,6 +100,19 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
             priority={priority}
             className="transition-transform duration-300 group-hover:scale-105"
           />
+          
+          {/* Priority Icons */}
+          {event.priority === 'Top-Event' && (
+            <div className="absolute top-3 left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-primary/90 backdrop-blur-sm">
+                <Flame className="h-5 w-5 text-primary-foreground" />
+            </div>
+          )}
+          {event.priority === 'Empfohlen' && (
+             <div className="absolute top-3 left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400/90 backdrop-blur-sm">
+                <Star className="h-5 w-5 text-white" />
+            </div>
+          )}
+
           <Badge
             className="absolute top-3 right-3"
             style={{
@@ -51,6 +122,18 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
           >
             {event.category}
           </Badge>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute top-2 left-2 h-8 w-8 rounded-full bg-background/80 text-foreground hover:bg-background"
+            onClick={handleAddToCalendar}
+          >
+            {isSaved ? (
+              <CheckCircle className="h-5 w-5 text-primary" />
+            ) : (
+              <PlusCircle className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </Link>
       <div className="p-4 flex flex-col flex-grow">
@@ -75,8 +158,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
 
         <div className="mt-4 flex items-end justify-between gap-2">
             <div className='flex-shrink-0'>
-                <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
-                {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
+                {renderPrice()}
             </div>
 
             <div className="text-right">

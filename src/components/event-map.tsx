@@ -138,7 +138,7 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange,
   }
 
   const handleMoreInfoClick = (eventId: string) => {
-    router.push(`/events/${eventId}`);
+    router.push(`/events/${eventId}?from=map`);
   };
 
   const handleGetDirectionsClick = (address: string) => {

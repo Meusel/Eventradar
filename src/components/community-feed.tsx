@@ -2,16 +2,31 @@ import { Community } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
 interface CommunityFeedProps {
   communities: Community[];
+  onJoin: (communityId: string) => void;
+  title: string;
 }
 
-export default function CommunityFeed({ communities }: CommunityFeedProps) {
+export default function CommunityFeed({ communities, onJoin, title }: CommunityFeedProps) {
+  if (communities.length === 0) {
+    return null;
+  }
+
+  const handleJoinClick = (e: React.MouseEvent, communityId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onJoin(communityId);
+  };
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {communities.map((community) => (
-        <Link key={community.id} href={`/communities/${community.id}`} className="block hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
+    <div className="my-8">
+      <h2 className="text-2xl font-bold font-headline mb-4">{title}</h2>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {communities.map((community) => (
+          <Link key={community.id} href={`/communities/${community.id}`} className="block hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
             <Card className="overflow-hidden h-full">
               <Image
                 src={community.imageUrl}
@@ -25,13 +40,15 @@ export default function CommunityFeed({ communities }: CommunityFeedProps) {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">{community.description}</p>
-                <div className="mt-4">
+                <div className="mt-4 flex justify-between items-center">
                   <p className="text-sm font-semibold">{community.members.length} Mitglieder</p>
+                  <Button onClick={(e) => handleJoinClick(e, community.id)}>Beitreten</Button>
                 </div>
               </CardContent>
             </Card>
-        </Link>
-      ))}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
