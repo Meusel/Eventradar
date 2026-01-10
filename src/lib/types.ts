@@ -20,6 +20,8 @@ export type Event = {
   venue: string;
   price: number;
   isFree: boolean;
+  studentDiscount: boolean;
+  studentPrice?: number;
   targetGroups: string[];
   accessibility: string[];
   extras: string[];

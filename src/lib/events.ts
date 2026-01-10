@@ -25,6 +25,8 @@ const eventsData: Event[] = [
     venue: "Palette",
     price: 5,
     isFree: false,
+    studentDiscount: true, // Rabatt aktiviert
+    studentPrice: 0, // Kostenlos für Studierende
     targetGroups: ["Studierende", "Erwachsene"],
     accessibility: [],
     extras: ["Online-Tickets", "Abendkasse"],
@@ -55,6 +57,7 @@ const eventsData: Event[] = [
     venue: "Kunstmuseum Moritzburg",
     price: 0,
     isFree: true,
+    studentDiscount: false,
     targetGroups: ["Erwachsene", "Senioren", "Studierende"],
     accessibility: ["Rollstuhlgerecht", "Barrierefreie Toilette"],
     extras: [],
@@ -85,6 +88,8 @@ const eventsData: Event[] = [
     venue: "Station Endlos",
     price: 10,
     isFree: false,
+    studentDiscount: true, // Rabatt aktiviert
+    studentPrice: 5, // 5€ für Studierende
     targetGroups: ["Studierende"],
     accessibility: [],
     extras: ["Online-Tickets", "Abendkasse"],
@@ -115,6 +120,7 @@ const eventsData: Event[] = [
     venue: "Peißnitzinsel",
     price: 5,
     isFree: false,
+    studentDiscount: false,
     targetGroups: ["Familien", "Kinder", "Studierende", "Erwachsene"],
     accessibility: [],
     extras: ["Outdoor", "Online-Tickets", "Abendkasse"],
@@ -145,6 +151,7 @@ const eventsData: Event[] = [
     venue: "MLU Weinberg Campus",
     price: 0,
     isFree: true,
+    studentDiscount: false,
     targetGroups: ["Studierende"],
     accessibility: ["Rollstuhlgerecht"],
     extras: ["Anmeldung erforderlich"],
@@ -171,6 +178,7 @@ const eventsData: Event[] = [
     extras: ["Abendkasse"],
     isFree: false,
     soldOut: false,
+    studentDiscount: false,
     time: {
         start: "2026-02-21T20:00:00Z",
         end: "2026-02-21T23:00:00Z",
@@ -199,6 +207,7 @@ const eventsData: Event[] = [
     longitude: 11.963,
     isFree: false,
     soldOut: false,
+    studentDiscount: false,
     categories: ["Musik", "Jazz"],
     time: {
         start: "2026-02-25T20:00:00Z",

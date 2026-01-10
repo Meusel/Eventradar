@@ -56,6 +56,37 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
     window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const renderPrice = () => {
+    // Check if a student discount is applicable and the student price is a valid number.
+    const isStudentDiscountApplicable = event.studentDiscount && typeof event.studentPrice === 'number';
+
+    if (isStudentDiscountApplicable) {
+      return (
+        <div className="flex items-baseline gap-2">
+          {/* Display student price, with special styling for free events */}
+          <span className={`text-lg font-bold ${event.studentPrice === 0 ? 'text-green-500 animate-pulse' : ''}`}>
+            {event.studentPrice > 0 ? `${event.studentPrice} €` : 'Kostenlos'}
+          </span>
+          {/* Display original price, struck through */}
+          <span className="text-sm text-muted-foreground line-through">
+            {`${event.price} €`}
+          </span>
+        </div>
+      );
+    }
+
+    // Fallback to the regular price display if no student discount is available.
+    return (
+      <div>
+        <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>
+            {event.price > 0 ? `${event.price} €` : 'Kostenlos'}
+        </span>
+        {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
+      </div>
+    );
+  };
+
+
   return (
     <div className="group block h-full rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:shadow-lg">
       <Link href={`/events/${event.id}`} className="block">
@@ -127,8 +158,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
 
         <div className="mt-4 flex items-center justify-between gap-2">
             <div className='flex-shrink-0'>
-                <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>{event.price > 0 ? `${event.price} €` : 'Kostenlos'}</span>
-                {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
+                {renderPrice()}
             </div>
 
             <div className="flex gap-2">

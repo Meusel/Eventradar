@@ -6,6 +6,7 @@ import EventCard from './event-card';
 import { Button } from './ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox'; // Import Checkbox
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +25,7 @@ type EventFeedProps = {
 export default function EventFeed({ events, categories, activeCategory, onCategoryChange }: EventFeedProps) {
   const [price, setPrice] = useState(50);
   const [duration, setDuration] = useState(12);
+  const [studentDiscountOnly, setStudentDiscountOnly] = useState(false); // State for student discount
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -31,10 +33,12 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
   }, []);
 
   const filteredEvents = useMemo(() => {
-    // The parent component is now responsible for category filtering.
-    // This component only applies its own internal filters for price and duration.
-    return events.filter(event => event.price <= price && event.duration <= duration);
-  }, [events, price, duration]);
+    return events.filter(event => 
+      event.price <= price && 
+      event.duration <= duration &&
+      (!studentDiscountOnly || event.studentDiscount)
+    );
+  }, [events, price, duration, studentDiscountOnly]);
 
   if (!isClient) {
     return null; // or a loading skeleton
@@ -49,7 +53,7 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
                 key={category}
                 variant={activeCategory === category ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => onCategoryChange(category)} // Use the passed-in handler
+                onClick={() => onCategoryChange(category)}
                 className="rounded-full flex-shrink-0"
             >
                 {category}
@@ -68,6 +72,7 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
           </AccordionTrigger>
           <AccordionContent>
             <div className="grid grid-cols-1 gap-6 pt-4">
+              {/* Price Slider */}
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <Label htmlFor="price-slider">Preis</Label>
@@ -81,6 +86,7 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
                   onValueChange={(value) => setPrice(value[0])}
                 />
               </div>
+              {/* Duration Slider */}
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <Label htmlFor="duration-slider">Dauer</Label>
@@ -93,6 +99,17 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
                   value={[duration]}
                   onValueChange={(value) => setDuration(value[0])}
                 />
+              </div>
+              {/* Student Discount Checkbox */}
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="student-discount"
+                  checked={studentDiscountOnly}
+                  onCheckedChange={() => setStudentDiscountOnly(!studentDiscountOnly)}
+                />
+                <Label htmlFor="student-discount" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Nur Events mit Studentenrabatt
+                </Label>
               </div>
             </div>
           </AccordionContent>
