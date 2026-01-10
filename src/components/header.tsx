@@ -1,9 +1,10 @@
 
 import Link from "next/link";
-import { Radar, User } from "lucide-react";
+import { User } from "lucide-react";
+import Image from "next/image";
 
 const EventradarLogo = () => (
-    <Radar className="h-8 w-8 text-primary" />
+    <Image src="/logo.png" alt="Eventradar Logo" width={32} height={32} />
 );
 
 export default function Header() {
