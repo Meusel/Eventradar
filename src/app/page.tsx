@@ -109,13 +109,14 @@ function App() {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-            <CommunitySuggestions communities={suggestedCommunities} title="Community-Vorschläge" />
+            <AiRecommendations />
             <EventFeed
               events={filteredEvents}
               categories={categories}
               activeCategory={activeCategory}
               onCategoryChange={handleCategoryChange}
             />
+            <CommunitySuggestions communities={suggestedCommunities} title="Community-Vorschläge" />
           </>
         );
       case "search":
@@ -156,12 +157,6 @@ function App() {
             </h1>
             <CommunitySuggestions communities={suggestedCommunities} title="Community-Vorschläge" />
             <CommunityFeed communities={communities} />
-          </div>
-        );
-      case "recommendations":
-        return (
-          <div className="w-full">
-            <AiRecommendations />
           </div>
         );
       case "discover":
@@ -236,16 +231,6 @@ function App() {
           >
             <MessageSquare className="h-6 w-6" />
             <span className="text-xs">Chat</span>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveView("recommendations")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "recommendations" ? "text-primary" : ""
-            }`}
-          >
-            <Sparkles className="h-6 w-6" />
-            <span className="text-xs">Für Dich</span>
           </Button>
           <Button
             variant="ghost"

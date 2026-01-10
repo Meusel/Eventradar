@@ -7,8 +7,8 @@ import {
   MapPin,
   Ticket,
   MessageSquare,
-  PlusCircle,
-  CheckCircle,
+  Flame,
+  Star,
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { getCategoryColor } from '@/lib/category-colors';
@@ -67,6 +67,19 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
             priority={priority}
             className="transition-transform duration-300 group-hover:scale-105"
           />
+          
+          {/* Priority Icons */}
+          {event.priority === 'Top-Event' && (
+            <div className="absolute top-3 left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-primary/90 backdrop-blur-sm">
+                <Flame className="h-5 w-5 text-primary-foreground" />
+            </div>
+          )}
+          {event.priority === 'Empfohlen' && (
+             <div className="absolute top-3 left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400/90 backdrop-blur-sm">
+                <Star className="h-5 w-5 text-white" />
+            </div>
+          )}
+
           <Badge
             className="absolute top-3 right-3"
             style={{
