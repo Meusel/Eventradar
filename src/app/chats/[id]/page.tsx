@@ -11,7 +11,7 @@ const MOCK_CURRENT_USER_ID = 'user-1';
 
 export default function PrivateChatPage() {
   const params = useParams();
-  const recipientId = params.id as string;
+  const recipientId = params?.id as string;
   const [recipient, setRecipient] = useState<User | null>(null);
 
   useEffect(() => {

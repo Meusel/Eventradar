@@ -191,7 +191,7 @@ export default function EventPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-.full bg-primary/10 text-primary">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>

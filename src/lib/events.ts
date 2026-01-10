@@ -34,6 +34,7 @@ const eventsData: Event[] = [
     duration: 4,
     priority: 'Top-Event',
     attendees: [],
+    boxOffice: true,
   },
   {
     id: '2',
@@ -97,6 +98,7 @@ const eventsData: Event[] = [
     duration: 6,
     priority: 'Top-Event',
     attendees: [],
+    boxOffice: true,
   },
   {
     id: '4',
@@ -190,6 +192,7 @@ const eventsData: Event[] = [
     categories: ["Musik", "Open-Mic"],
     priority: 'Empfohlen',
     attendees: [],
+    boxOffice: true,
   },
   {
     id: '7',

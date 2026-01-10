@@ -1,3 +1,5 @@
+import type { FieldValue } from 'firebase/firestore';
+
 export type Event = {
   id: string;
   title: string;
@@ -28,6 +30,7 @@ export type Event = {
   soldOut: boolean;
   attendees: string[];
   priority?: 'Top-Event' | 'Empfohlen' | null;
+  boxOffice?: boolean;
 };
 
 export type Community = {
@@ -54,7 +57,7 @@ export type ChatMessage = {
   username: string;
   avatarUrl: string;
   text: string;
-  timestamp: any; // Allow any type for Firestore timestamp flexibility
+  timestamp: FieldValue; // Allow any type for Firestore timestamp flexibility
 };
 
 export type PrivateChatMessage = {
@@ -62,7 +65,7 @@ export type PrivateChatMessage = {
     chatId: string;
     senderId: string;
     text: string;
-    timestamp: any; // Using any for timestamp to avoid issues with firebase serverTimestamp
+    timestamp: FieldValue; // Using any for timestamp to avoid issues with firebase serverTimestamp
 };
 
 export type PrivateChatPreview = {
@@ -77,5 +80,5 @@ export type PrivateChat = {
     id: string;
     participants: string[]; // Array of user IDs
     lastMessage: string;
-    lastUpdated: any; // Using any for timestamp to avoid issues with firebase serverTimestamp
+    lastUpdated: FieldValue; // Using any for timestamp to avoid issues with firebase serverTimestamp
 }

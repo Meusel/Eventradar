@@ -21,8 +21,9 @@ export default function App() {
   // Use state for events and categories to make them dynamic
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [activeCategory, setActiveCategory] = useState('Alle');
   const searchParams = useSearchParams();
-  const eventId = searchParams.get('eventId');
+  const eventId = searchParams?.get('eventId');
   
   // Fetch events on component mount and set up a polling mechanism
   useEffect(() => {
@@ -70,6 +71,7 @@ export default function App() {
   };
   
   const handleFilterChange = (category: string) => {
+    setActiveCategory(category);
     if (category === 'Alle') {
       setFilteredEvents(allEvents);
     } else {
@@ -101,7 +103,7 @@ export default function App() {
                   onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
-            <EventFeed events={filteredEvents} categories={categories} onFilterChange={handleFilterChange}/>
+            <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleFilterChange}/>
           </>
         );
       case 'search':
@@ -118,7 +120,7 @@ export default function App() {
                   autoFocus
                 />
               </div>
-              {searchTerm ? <EventFeed events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} /> : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
+              {searchTerm ? <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleFilterChange} /> : <div className="text-center text-muted-foreground mt-8">Beginne zu tippen, um nach Events zu suchen.</div>}
             </>
         );
       case 'calendar':
@@ -138,11 +140,11 @@ export default function App() {
               </h1>
             </div>
             {/* The grid layout is removed, EventMap now takes the full width */}
-            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} selectedEventId={eventId} />
+            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleFilterChange} activeCategory={activeCategory} selectedEventId={eventId} />
           </>
         );
       default:
-        return <EventFeed events={filteredEvents} categories={categories} onFilterChange={handleFilterChange}/>;
+        return <EventFeed events={filteredEvents} categories={categories} activeCategory={activeCategory} onCategoryChange={handleFilterChange}/>;
     }
   }
 

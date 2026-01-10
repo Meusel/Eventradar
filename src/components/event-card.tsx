@@ -156,30 +156,37 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="mt-4 flex items-end justify-between gap-2">
             <div className='flex-shrink-0'>
                 {renderPrice()}
             </div>
 
-            <div className="flex gap-2">
-              {communities.length > 0 && (
-                <Button asChild size="sm" variant="outline">
-                  <Link href={`/communities/${communities[0].id}`}>
-                    <MessageSquare className="h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
+            <div className="text-right">
+                <div className="flex gap-2 justify-end">
+                  {communities.length > 0 && (
+                    <Button asChild size="sm" variant="outline">
+                      <Link href={`/communities/${communities[0].id}`}>
+                        <MessageSquare className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
 
-              <Button asChild size="sm">
-                <a
-                  href={event.ticketUrl}
-                  onClick={handleTicketClick}
-                  className="flex items-center gap-2"
-                >
-                  <Ticket className="h-4 w-4" />
-                  <span>Tickets</span>
-                </a>
-              </Button>
+                  <Button asChild size="sm">
+                    <a
+                      href={event.ticketUrl}
+                      onClick={handleTicketClick}
+                      className="flex items-center gap-2"
+                    >
+                      <Ticket className="h-4 w-4" />
+                      <span>Tickets</span>
+                    </a>
+                  </Button>
+                </div>
+                {event.boxOffice && (
+                    <div className="mt-1 text-xs text-muted-foreground">
+                        Abendkasse möglich
+                    </div>
+                )}
             </div>
         </div>
       </div>
