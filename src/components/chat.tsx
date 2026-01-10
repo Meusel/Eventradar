@@ -13,7 +13,7 @@ interface ChatProps {
 }
 
 export default function Chat({ community, currentUser }: ChatProps) {
-  const { messages, sendMessage } = useChat(community.id);
+  const { messages, sendMessage } = useChat(community, currentUser);
   const [newMessage, setNewMessage] = useState('');
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -31,7 +31,7 @@ export default function Chat({ community, currentUser }: ChatProps) {
         {messages.map((message) => (
           <div key={message.id} className={`flex items-start gap-3 ${message.senderId === currentUser.id ? 'justify-end' : ''}`}>
             {message.senderId !== currentUser.id && (
-              <img src={message.avatarUrl} alt={message.username} className="w-8 h-8 rounded-full" />
+              <img src={message.avatarUrl} alt={message.username} className="w-8 h-8 rounded-full object-cover" />
             )}
             <div className={`p-3 rounded-lg max-w-xs ${message.senderId === currentUser.id ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
               <p className="font-bold text-sm">{message.senderId === currentUser.id ? 'Du' : message.username}</p>
@@ -41,7 +41,7 @@ export default function Chat({ community, currentUser }: ChatProps) {
               </p>
             </div>
             {message.senderId === currentUser.id && (
-              <img src={currentUser.avatarUrl} alt={currentUser.name} className="w-8 h-8 rounded-full" />
+              <img src={currentUser.avatarUrl} alt={currentUser.name} className="w-8 h-8 rounded-full object-cover" />
             )}
           </div>
         ))}

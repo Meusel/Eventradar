@@ -35,12 +35,14 @@ export type Community = {
   description: string;
   imageUrl: string;
   members: string[];
+  organizerId: string;
 };
 
 export type User = {
   id: string;
   name: string;
   avatarUrl: string;
+  profileStatus: 'public' | 'private';
 };
 
 export type ChatMessage = {
@@ -61,7 +63,6 @@ export type PrivateChatMessage = {
     timestamp: any; // Using any for timestamp to avoid issues with firebase serverTimestamp
 };
 
-// This type was missing
 export type PrivateChatPreview = {
   id: string;
   recipient: User;
@@ -69,10 +70,10 @@ export type PrivateChatPreview = {
   lastUpdated: Date;
 };
 
+// Represents the structure of a private chat document in Firestore.
 export type PrivateChat = {
     id: string;
-    participants: string[];
+    participants: string[]; // Array of user IDs
     lastMessage: string;
     lastUpdated: any; // Using any for timestamp to avoid issues with firebase serverTimestamp
-    recipient: User;
 }

@@ -7,7 +7,7 @@ import AiRecommendations from "@/components/ai-recommendations";
 import { getEvents } from "@/lib/events";
 import type { Event } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles } from "lucide-react";
+import { Calendar, Compass, Home as HomeIcon, MessageSquare, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
 import CommunityFeed from "@/components/community-feed";
@@ -15,6 +15,7 @@ import { getCommunities } from "@/lib/communities";
 import type { Community } from "@/lib/types";
 import { getCommunitySuggestions } from "@/lib/community-suggestions";
 import CommunitySuggestions from "@/components/community-suggestions";
+import CalendarPage from "./calendar/page";
 
 // Dynamically import EventMap with SSR disabled
 const EventMap = dynamic(() => import("@/components/event-map"), { 
@@ -146,6 +147,8 @@ function App() {
             )}
           </>
         );
+      case "calendar":
+        return <CalendarPage />;
       case "chat":
         return (
           <div>
@@ -208,6 +211,16 @@ function App() {
           >
             <Search className="h-6 w-6" />
             <span className="text-xs">Suche</span>
+          </Button>
+           <Button
+            variant="ghost"
+            onClick={() => setActiveView("calendar")}
+            className={`flex flex-col h-full justify-center gap-1 ${
+              activeView === "calendar" ? "text-primary" : ""
+            }`}
+          >
+            <Calendar className="h-6 w-6" />
+            <span className="text-xs">Mein Kalender</span>
           </Button>
           <Button
             variant="ghost"
