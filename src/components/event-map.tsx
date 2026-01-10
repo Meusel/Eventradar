@@ -75,7 +75,7 @@ const MapEvents = memo(({ events, location, selectedEvent, markerRefs, handleMor
                 </Marker>
             )}
             {events
-                .filter(event => typeof event.latitude === 'number' && typeof event.longitude === 'number')
+                .filter((event: Event) => typeof event.latitude === 'number' && typeof event.longitude === 'number')
                 .map((event: Event) => {
                 const distance = location ? calculateDistance(location.latitude, location.longitude, event.latitude, event.longitude).toFixed(2) : null;
                 return (
@@ -139,7 +139,7 @@ const EventMap: React.FC<EventMapProps> = ({ events, categories, onFilterChange,
   }
 
   const handleMoreInfoClick = (eventId: string) => {
-    router.push(`/events/${eventId}`);
+    router.push(`/events/${eventId}?from=map`);
   };
 
   const handleGetDirectionsClick = (address: string) => {
