@@ -57,19 +57,16 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
   };
 
   const renderPrice = () => {
-    // Check if a student discount is applicable and the student price is a valid number.
-    const isStudentDiscountApplicable = event.studentDiscount && typeof event.studentPrice === 'number';
+    const { studentDiscount, studentPrice, price } = event;
 
-    if (isStudentDiscountApplicable) {
+    if (studentDiscount && typeof studentPrice === 'number') {
       return (
         <div className="flex items-baseline gap-2">
-          {/* Display student price, with special styling for free events */}
-          <span className={`text-lg font-bold ${event.studentPrice === 0 ? 'text-green-500 animate-pulse' : ''}`}>
-            {event.studentPrice > 0 ? `${event.studentPrice} €` : 'Kostenlos'}
+          <span className={`text-lg font-bold ${studentPrice === 0 ? 'text-green-500 animate-pulse' : ''}`}>
+            {studentPrice > 0 ? `${studentPrice} €` : 'Kostenlos'}
           </span>
-          {/* Display original price, struck through */}
           <span className="text-sm text-muted-foreground line-through">
-            {`${event.price} €`}
+            {`${price} €`}
           </span>
         </div>
       );
@@ -78,10 +75,10 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
     // Fallback to the regular price display if no student discount is available.
     return (
       <div>
-        <span className={`text-lg font-bold ${event.price === 0 ? 'text-green-500 animate-pulse' : ''}`}>
-            {event.price > 0 ? `${event.price} €` : 'Kostenlos'}
+        <span className={`text-lg font-bold ${price === 0 ? 'text-green-500 animate-pulse' : ''}`}>
+            {price > 0 ? `${price} €` : 'Kostenlos'}
         </span>
-        {event.price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
+        {price > 0 && <span className="text-xs text-muted-foreground"> zzgl. Geb.</span>}
       </div>
     );
   };

@@ -269,7 +269,7 @@ function App() {
                 Event-Karte von <span className="text-primary">Halle</span>
               </h1>
             </div>
-            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />
+            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} activeCategory={activeCategory} />
           </>
         );
       case "recommendations":

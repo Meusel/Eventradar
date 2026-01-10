@@ -82,7 +82,7 @@ function App() {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} />
+            <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} activeCategory={activeCategory} />
         </div>
       </main>
       <BottomNav />
