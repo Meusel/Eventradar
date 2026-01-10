@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { Radar, User, Users } from "lucide-react";
+import { Radar, User } from "lucide-react";
 
 const EventradarLogo = () => (
     <Radar className="h-8 w-8 text-primary" />
@@ -17,9 +17,6 @@ export default function Header() {
           </span>
         </Link>
         <div className="flex items-center gap-4">
-          <Link href="/my-communities">
-            <Users className="h-8 w-8 text-primary" />
-          </Link>
           <Link href="/profile">
             <User className="h-8 w-8 text-primary" />
           </Link>
