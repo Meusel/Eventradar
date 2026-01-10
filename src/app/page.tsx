@@ -7,7 +7,7 @@ import AiRecommendations from "@/components/ai-recommendations";
 import { getEvents } from "@/lib/events";
 import type { Event } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles } from "lucide-react";
+import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles, Calendar, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
 import CommunityFeed from "@/components/community-feed";
@@ -78,6 +78,8 @@ function App() {
       );
     });
 
+  const eventsToday = allEvents.filter(event => event.date === '2026-01-27');
+
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
@@ -115,6 +117,20 @@ function App() {
               activeCategory={activeCategory}
               onCategoryChange={handleCategoryChange}
             />
+          </>
+        );
+      case "heute-in-halle":
+        return (
+          <>
+            <div className="flex items-center gap-3 mb-6">
+                <h1 className="text-4xl font-bold font-headline tracking-tighter">Heute in Halle</h1>
+                <Flame className="w-8 h-8 text-primary" />
+            </div>
+            <EventFeed
+              events={eventsToday}
+              categories={[]}
+              activeCategory="Alle"
+              onCategoryChange={() => {}} />
           </>
         );
       case "search":
@@ -206,6 +222,16 @@ function App() {
           </Button>
           <Button
             variant="ghost"
+            onClick={() => setActiveView("heute-in-halle")}
+            className={`flex flex-col h-full justify-center gap-1 ${
+              activeView === "heute-in-halle" ? "text-primary" : ""
+            }`}
+          >
+            <Calendar className="h-6 w-6" />
+            <span className="text-xs">Heute</span>
+          </Button>
+          <Button
+            variant="ghost"
             onClick={() => setActiveView("search")}
             className={`flex flex-col h-full justify-center gap-1 ${
               activeView === "search" ? "text-primary" : ""
@@ -242,7 +268,7 @@ function App() {
             }`}
           >
             <Compass className="h-6 w-6" />
-            <span className="text-xs">Entdecken</span>
+            <span className-="text-xs">Entdecken</span>
           </Button>
         </nav>
       </footer>
