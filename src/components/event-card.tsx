@@ -9,6 +9,8 @@ import {
   MessageSquare,
   Flame,
   Star,
+  PlusCircle,
+  CheckCircle,
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { getCategoryColor } from '@/lib/category-colors';
