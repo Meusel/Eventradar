@@ -7,7 +7,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 
 import Header from "@/components/header";
 import EventFeed from "@/components/event-feed";
-import AiRecommendations from "@/components/ai-recommendations";
 import { getEvents } from "@/lib/events";
 import { getCommunities, joinCommunity } from "@/lib/communities";
 import { getCommunitySuggestions } from "@/lib/community-suggestions";
@@ -215,34 +214,6 @@ function App() {
               onCategoryChange={() => {}} />
           </>
         );
-      case "search":
-        return (
-          <>
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Suche nach Events..."
-                className="w-full rounded-full bg-muted pl-10 pr-4 py-6 text-lg"
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                autoFocus
-              />
-            </div>
-            {searchTerm ? (
-              <EventFeed
-                events={filteredEvents}
-                categories={categories}
-                activeCategory={activeCategory}
-                onCategoryChange={handleCategoryChange}
-              />
-            ) : (
-              <div className="text-center text-muted-foreground mt-8">
-                Beginne zu tippen, um nach Events zu suchen.
-              </div>
-            )}
-          </>
-        );
       case "calendar":
         return <CalendarPage />;
       case "chat":
@@ -285,12 +256,6 @@ function App() {
             </div>
             <EventMap events={filteredEvents} categories={categories} onFilterChange={handleCategoryChange} activeCategory={activeCategory} />
           </>
-        );
-      case "recommendations":
-        return (
-          <div className="w-full">
-            <AiRecommendations />
-          </div>
         );
       default:
         return (
@@ -341,16 +306,6 @@ function App() {
             <Calendar className="h-6 w-6" />
             <span className="text-xs">Heute</span>
           </Button>
-          <Button
-            variant="ghost"
-            onClick={() => handleNavClick("search")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "search" ? "text-primary" : ""
-            }`}
-          >
-            <Search className="h-6 w-6" />
-            <span className="text-xs">Suche</span>
-          </Button>
            <Button
             variant="ghost"
             onClick={() => handleNavClick("calendar")}
@@ -380,16 +335,6 @@ function App() {
           >
             <Compass className="h-6 w-6" />
             <span className="text-xs">Entdecken</span>
-          </Button>
-           <Button
-            variant="ghost"
-            onClick={() => handleNavClick("recommendations")}
-            className={`flex flex-col h-full justify-center gap-1 ${
-              activeView === "recommendations" ? "text-primary" : ""
-            }`}
-          >
-            <Sparkles className="h-6 w-6" />
-            <span className="text-xs">KI-Tipps</span>
           </Button>
         </nav>
       </footer>
