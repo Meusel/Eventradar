@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
-import CookieConsent from "@/components/cookie-consent";
+import LayoutProvider from "@/components/layout-provider";
 
 export const metadata: Metadata = {
   title: "Eventradar",
@@ -24,9 +23,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <CookieConsent />
-        {children}
-        <Toaster />
+        <LayoutProvider>{children}</LayoutProvider>
       </body>
     </html>
   );

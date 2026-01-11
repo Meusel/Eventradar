@@ -8,22 +8,20 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from "@/components/header";
 import EventFeed from "@/components/event-feed";
 import AiRecommendations from "@/components/ai-recommendations";
+import { getEvents } from "@/lib/events";
+import { getCommunities, joinCommunity } from "@/lib/communities";
+import { getCommunitySuggestions } from "@/lib/community-suggestions";
+import type { Event, User, Community } from "@/lib/types";
+import { Input } from "@/components/ui/input";
+import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles, Calendar, Flame } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
 import CommunitySuggestions from "@/components/community-suggestions";
 import CommunityFeed from "@/components/community-feed";
 import PrivateChatList from "@/components/private-chat-list";
 import CalendarPage from "./calendar/page";
-
-import { getEvents } from "@/lib/events";
-import { getCommunities, joinCommunity } from "@/lib/communities";
-import { getCommunitySuggestions } from "@/lib/community-suggestions";
-import type { Event, User, Community } from "@/lib/types";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Calendar, Compass, Home as HomeIcon, MessageSquare, Search, Sparkles } from "lucide-react";
 
 // Dynamically import EventMap with SSR disabled
 const EventMap = dynamic(() => import("@/components/event-map"), { 
@@ -159,6 +157,8 @@ function App() {
       );
     });
 
+  const eventsToday = allEvents.filter(event => event.date === '2026-01-27');
+
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
@@ -199,6 +199,20 @@ function App() {
               activeCategory={activeCategory}
               onCategoryChange={handleCategoryChange}
             />
+          </>
+        );
+      case "heute-in-halle":
+        return (
+          <>
+            <div className="flex items-center gap-3 mb-6">
+                <h1 className="text-4xl font-bold font-headline tracking-tighter">Heute in Halle</h1>
+                <Flame className="w-8 h-8 text-primary" />
+            </div>
+            <EventFeed
+              events={eventsToday}
+              categories={[]}
+              activeCategory="Alle"
+              onCategoryChange={() => {}} />
           </>
         );
       case "search":
@@ -316,6 +330,16 @@ function App() {
           >
             <HomeIcon className="h-6 w-6" />
             <span className="text-xs">Home</span>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => handleNavClick("heute-in-halle")}
+            className={`flex flex-col h-full justify-center gap-1 ${
+              activeView === "heute-in-halle" ? "text-primary" : ""
+            }`}
+          >
+            <Calendar className="h-6 w-6" />
+            <span className="text-xs">Heute</span>
           </Button>
           <Button
             variant="ghost"
