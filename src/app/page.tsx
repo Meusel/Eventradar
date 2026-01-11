@@ -9,7 +9,9 @@ import Header from "@/components/header";
 import EventFeed from "@/components/event-feed";
 import AiRecommendations from "@/components/ai-recommendations";
 import { getEvents } from "@/lib/events";
-import type { Event } from "@/lib/types";
+import { getCommunities, joinCommunity } from "@/lib/communities";
+import { getCommunitySuggestions } from "@/lib/community-suggestions";
+import type { Event, User, Community } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles, Calendar, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,17 +20,8 @@ import CommunitySuggestions from "@/components/community-suggestions";
 import CommunityFeed from "@/components/community-feed";
 import PrivateChatList from "@/components/private-chat-list";
 import CalendarPage from "./calendar/page";
-
-import { getEvents } from "@/lib/events";
-import { getCommunities, joinCommunity } from "@/lib/communities";
-import { getCommunitySuggestions } from "@/lib/community-suggestions";
-import type { Event, User, Community } from "@/lib/types";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Calendar, Compass, Home as HomeIcon, MessageSquare, Search, Sparkles } from "lucide-react";
 
 // Dynamically import EventMap with SSR disabled
 const EventMap = dynamic(() => import("@/components/event-map"), { 
@@ -340,7 +333,7 @@ function App() {
           </Button>
           <Button
             variant="ghost"
-            onClick={() => setActiveView("heute-in-halle")}
+            onClick={() => handleNavClick("heute-in-halle")}
             className={`flex flex-col h-full justify-center gap-1 ${
               activeView === "heute-in-halle" ? "text-primary" : ""
             }`}
@@ -350,7 +343,7 @@ function App() {
           </Button>
           <Button
             variant="ghost"
-            onClick={() => setActiveView("search")}
+            onClick={() => handleNavClick("search")}
             className={`flex flex-col h-full justify-center gap-1 ${
               activeView === "search" ? "text-primary" : ""
             }`}
@@ -386,7 +379,7 @@ function App() {
             }`}
           >
             <Compass className="h-6 w-6" />
-            <span className-="text-xs">Entdecken</span>
+            <span className="text-xs">Entdecken</span>
           </Button>
            <Button
             variant="ghost"
