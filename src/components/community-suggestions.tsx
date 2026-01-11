@@ -7,12 +7,19 @@ import { Button } from "./ui/button";
 interface CommunitySuggestionsProps {
   communities: Community[];
   title: string;
+  onJoin: (communityId: string) => void; // Callback to notify parent of join
 }
 
-export default function CommunitySuggestions({ communities, title }: CommunitySuggestionsProps) {
+export default function CommunitySuggestions({ communities, title, onJoin }: CommunitySuggestionsProps) {
   if (communities.length === 0) {
     return null;
   }
+
+  const handleJoinClick = (e: React.MouseEvent, communityId: string) => {
+    e.preventDefault(); // Prevent navigation
+    e.stopPropagation(); // Stop event bubbling
+    onJoin(communityId);
+  };
 
   return (
     <div className="my-8">
@@ -35,7 +42,7 @@ export default function CommunitySuggestions({ communities, title }: CommunitySu
                   <p className="text-muted-foreground">{community.description}</p>
                   <div className="mt-4 flex justify-between items-center">
                     <p className="text-sm font-semibold">{community.members.length} Mitglieder</p>
-                    <Button>Beitreten</Button>
+                    <Button onClick={(e) => handleJoinClick(e, community.id)}>Beitreten</Button>
                   </div>
                 </CardContent>
               </Card>

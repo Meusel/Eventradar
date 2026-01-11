@@ -17,9 +17,11 @@ export default function Header() {
             Eventradar
           </span>
         </Link>
-        <Link href="/profile">
-          <User className="h-8 w-8 text-primary" />
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/profile">
+            <User className="h-8 w-8 text-primary" />
+          </Link>
+        </div>
       </div>
     </header>
   );

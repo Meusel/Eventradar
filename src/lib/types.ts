@@ -22,11 +22,14 @@ export type Event = {
   venue: string;
   price: number;
   isFree: boolean;
+  studentDiscount: boolean;
+  studentPrice?: number;
   targetGroups: string[];
   accessibility: string[];
   extras: string[];
   soldOut: boolean;
   attendees: string[];
+  priority?: 'Top-Event' | 'Empfohlen' | null;
   boxOffice?: boolean;
 };
 
@@ -37,6 +40,7 @@ export type Community = {
   description: string;
   imageUrl: string;
   members: string[];
+  organizerId: string;
 };
 
 export type User = {
