@@ -34,9 +34,16 @@ export default function Chat({ community, currentUser }: ChatProps) {
               <img src={message.avatarUrl} alt={message.username} className="w-8 h-8 rounded-full object-cover" />
             )}
             <div className={`p-3 rounded-lg max-w-xs ${message.senderId === currentUser.id ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-              <p className="font-bold text-sm">{message.senderId === currentUser.id ? 'Du' : message.username}</p>
-              <p>{message.text}</p>
-              <p className="text-xs text-muted-foreground/80 mt-1">
+                <div className="flex items-center gap-2">
+                    <p className="font-bold text-sm">{message.senderId === currentUser.id ? 'Du' : message.username}</p>
+                    {message.senderId === community.organizerId && (
+                        <span className="text-xs font-medium bg-secondary text-secondary-foreground py-0.5 px-1.5 rounded-full">
+                        Veranstalter
+                        </span>
+                    )}
+                </div>
+              <p className="mt-1">{message.text}</p>
+              <p className="text-xs text-muted-foreground/80 mt-1 text-right">
                 {message.timestamp?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>

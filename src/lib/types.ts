@@ -58,6 +58,7 @@ export type ChatMessage = {
   avatarUrl: string;
   text: string;
   timestamp: FieldValue; // Allow any type for Firestore timestamp flexibility
+  isAutoReply?: boolean;
 };
 
 export type PrivateChatMessage = {

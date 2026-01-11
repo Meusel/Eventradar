@@ -1,6 +1,6 @@
 'use client';
 import { getEventById } from "@/lib/events";
-import { notFound, useParams, useRouter, useSearchParams } from "next/navigation";
+import { notFound, useParams, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,7 +13,6 @@ import {
   Clock,
   Map,
   Navigation,
-  Users,
   PlusCircle
 } from "lucide-react";
 import { format } from "date-fns";
@@ -22,20 +21,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SocialShareButtons from "@/components/social-share-buttons";
 import Header from "@/components/header";
-import { getCommunityByEventId, updateCommunity } from "@/lib/communities";
 import { useState, useEffect } from "react";
 import { Event } from "@/lib/types";
+import CommunitySuggestion from "@/components/community-suggestion";
+import { getUserById } from "@/lib/users";
 
 export default function EventPage() {
   const params = useParams();
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const eventId = params ? (Array.isArray(params.id) ? params.id[0] : params.id) : null;
+  const eventId = params?.id as string;
 
-  // Mock current user. In a real app, this would come from your auth solution.
-  const currentUserId = 'user-1';
+  // In a real app, this would come from your auth context
+  const currentUser = getUserById('user-1'); 
 
-  const [isMember, setIsMember] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [backHref, setBackHref] = useState("/");
 
@@ -46,50 +44,26 @@ export default function EventPage() {
     }
   }, [searchParams]);
 
-  if (!eventId) {
-    notFound();
-  }
-
   const event = getEventById(eventId);
 
-  if (!event) {
+  useEffect(() => {
+    if (event) {
+      const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
+      setIsFavorite(favorites.some((fav: Event) => fav.id === event.id));
+    }
+  }, [event]);
+
+  if (!event || !currentUser) {
     notFound();
   }
-
-  useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
-    setIsFavorite(favorites.some((fav: Event) => fav.id === eventId));
-  }, [eventId]);
-
-  const community = getCommunityByEventId(eventId);
-
-  useEffect(() => {
-    if (community) {
-      setIsMember(community.members.includes(currentUserId));
-    }
-  }, [community]);
-
-  const handleJoinCommunity = () => {
-    if (community) {
-      const updatedCommunity = {
-        ...community,
-        members: [...community.members, currentUserId]
-      };
-      updateCommunity(updatedCommunity);
-      setIsMember(true);
-      router.push(`/communities/${community.id}`);
-    }
-  };
   
   const handleAddToCalendar = () => {
     const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
     if (isFavorite) {
-        // Remove from favorites
-        const newFavorites = favorites.filter((fav: Event) => fav.id !== eventId);
+        const newFavorites = favorites.filter((fav: Event) => fav.id !== event.id);
         localStorage.setItem('favoriteEvents', JSON.stringify(newFavorites));
         setIsFavorite(false);
     } else {
-        // Add to favorites
         const newFavorites = [...favorites, event];
         localStorage.setItem('favoriteEvents', JSON.stringify(newFavorites));
         setIsFavorite(true);
@@ -97,7 +71,6 @@ export default function EventPage() {
   };
 
  const handleGetDirections = () => {
-    if (!event) return;
     const address = encodeURIComponent(event.location);
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const url = isIOS
@@ -107,7 +80,6 @@ export default function EventPage() {
   };
 
   const handleShowOnMap = () => {
-    if (!event) return;
     const address = encodeURIComponent(event.location);
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const url = isIOS
@@ -152,30 +124,9 @@ export default function EventPage() {
                 <p className="text-base leading-relaxed text-foreground/80">
                   {event.description}
                 </p>
+                <CommunitySuggestion eventId={event.id} currentUser={currentUser} />
               </div>
               <div className="space-y-6">
-                {community && (
-                  <div className="rounded-lg border bg-card p-4">
-                    <h3 className="font-semibold flex items-center gap-2 mb-2">
-                      <Users className="h-5 w-5 text-primary" />
-                      Community
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Tritt der Community bei, um dich mit anderen Teilnehmern auszutauschen.
-                    </p>
-                    {isMember ? (
-                      <Button asChild className="w-full">
-                        <Link href={`/communities/${community.id}`}>
-                          Zum Community-Chat
-                        </Link>
-                      </Button>
-                    ) : (
-                      <Button onClick={handleJoinCommunity} className="w-full">
-                        Community beitreten
-                      </Button>
-                    )}
-                  </div>
-                )}
                 <div className="flex items-start gap-4">
                   <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <CalendarDays className="h-5 w-5" />
@@ -185,13 +136,13 @@ export default function EventPage() {
                     <p className="text-sm text-foreground/80">
                       {format(new Date(event.date), "EEEE, dd. MMMM yyyy", { locale: de })}
                     </p>
-                    <p className="text-sm text-foreground/80">
+                    <p className="text-sm text-foreground/80" suppressHydrationWarning={true}>
                       Beginnt um {format(new Date(event.time.start), "HH:mm", { locale: de })} Uhr
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-.full bg-primary/10 text-primary">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>

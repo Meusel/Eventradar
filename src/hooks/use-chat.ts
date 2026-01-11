@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, onSnapshot, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
 import type { ChatMessage, User, Community } from '@/lib/types';
-import { getUsersByIds } from '@/lib/users';
+import { generateAndSendAiReply } from '@/lib/ai-responder';
 
 export function useChat(community: Community, currentUser: User) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -20,6 +20,7 @@ export function useChat(community: Community, currentUser: User) {
         id: doc.id,
         ...doc.data(),
         timestamp: doc.data().timestamp?.toDate(),
+        isAutoReply: doc.data().isAutoReply || false, // Ensure isAutoReply is always a boolean
       } as ChatMessage));
       setMessages(msgs);
       setLoading(false);
@@ -46,32 +47,22 @@ export function useChat(community: Community, currentUser: User) {
       avatarUrl,
       text,
       timestamp: serverTimestamp(),
+      isAutoReply,
     });
   }, [community.id, currentUser]);
 
-  // Auto-reply effect
+  // AI-powered auto-reply effect
   useEffect(() => {
     if (loading || messages.length === 0) return;
 
     const lastMessage = messages[messages.length - 1];
 
-    if (lastMessage.senderId === currentUser.id) {
-        const otherMembers = getUsersByIds(community.members.filter(id => id !== currentUser.id));
-        
-        if (otherMembers.length > 0) {
-            const randomMember = otherMembers[Math.floor(Math.random() * otherMembers.length)];
-            
-            const replyText = `Hey ${currentUser.name}, danke für deine Nachricht! Wir freuen uns, dich in der Community zu haben.`;
-
-            const timeoutId = setTimeout(() => {
-                sendMessage(replyText, true, randomMember);
-            }, 1500); // 1.5-second delay
-
-            return () => clearTimeout(timeoutId);
-        }
+    // Only trigger for non-auto-replies from the current user
+    if (lastMessage && lastMessage.senderId === currentUser.id && !lastMessage.isAutoReply) {
+        generateAndSendAiReply(community, messages, currentUser, sendMessage);
     }
-}, [messages, community, currentUser, sendMessage, loading]);
-
+    
+  }, [messages, community, currentUser, sendMessage, loading]);
 
   return { messages, loading, sendMessage };
 }
