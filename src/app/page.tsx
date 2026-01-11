@@ -10,7 +10,7 @@ import EventFeed from "@/components/event-feed";
 import AiRecommendations from "@/components/ai-recommendations";
 import PriorityLegend from "@/components/priority-legend";
 import CommunitySuggestions from "@/components/community-suggestions";
-import CommunityFeed from "@/components/community-feed";
+import DiscoverCommunities from "@/components/discover-communities";
 import PrivateChatList from "@/components/private-chat-list";
 import CalendarPage from "./calendar/page";
 
@@ -92,7 +92,6 @@ function App() {
   const [allCommunities, setAllCommunities] = useState<Community[]>([]);
   const [joinedCommunities, setJoinedCommunities] = useState<Community[]>([]);
   const [suggestedCommunities, setSuggestedCommunities] = useState<Community[]>([]);
-  const [notJoinedCommunities, setNotJoinedCommunities] = useState<Community[]>([]);
   const [privateChats, setPrivateChats] = useState<{ user: User; lastMessage: string }[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>("Alle");
@@ -113,13 +112,11 @@ function App() {
     const communities = getCommunities();
     const suggestions = getCommunitySuggestions(currentUser.id);
     const joined = communities.filter(community => community.members.includes(currentUser.id));
-    const notJoined = communities.filter(community => !community.members.includes(currentUser.id));
     
     setAllEvents(events);
     setAllCommunities(communities);
     setJoinedCommunities(joined);
-    setSuggestedCommunities(suggestions.filter(c => !joined.some(jc => jc.id === c.id)));
-    setNotJoinedCommunities(notJoined);
+    setSuggestedCommunities(suggestions);
 
     // Mock private chats
     setPrivateChats([
@@ -137,12 +134,11 @@ function App() {
   const handleJoinCommunity = (communityId: string) => {
     const updatedCommunities = joinCommunity(communityId, currentUser.id);
     const joined = updatedCommunities.filter(community => community.members.includes(currentUser.id));
-    const notJoined = updatedCommunities.filter(community => !community.members.includes(currentUser.id));
     
     setAllCommunities(updatedCommunities);
     setJoinedCommunities(joined);
-    setNotJoinedCommunities(notJoined);
-    setSuggestedCommunities(suggestedCommunities.filter(c => c.id !== communityId));
+    // Immediately remove the joined community from suggestions
+    setSuggestedCommunities(prevSuggestions => prevSuggestions.filter(c => c.id !== communityId));
   };
 
   const filteredEvents = allEvents
@@ -188,11 +184,6 @@ function App() {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-            <CommunitySuggestions 
-              communities={suggestedCommunities}
-              title="Community-Vorschläge" 
-              onJoin={handleJoinCommunity} 
-            />
             <EventFeed
               events={filteredEvents}
               categories={categories}
@@ -250,11 +241,11 @@ function App() {
             {chatTab === 'communities' ? (
               <>
                 <MyCommunities communities={joinedCommunities} />
-                <CommunityFeed 
-                  communities={notJoinedCommunities.filter(c => !suggestedCommunities.some(sc => sc.id === c.id))}
-                  title="Weitere Communities entdecken"
-                  onJoin={handleJoinCommunity}
+                <CommunitySuggestions 
+                  communities={suggestedCommunities.slice(0, 3)}
+                  onJoin={handleJoinCommunity} 
                 />
+                <DiscoverCommunities onJoin={handleJoinCommunity} />
               </>
             ) : (
               <PrivateChatList chats={privateChats} />
