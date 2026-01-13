@@ -50,12 +50,6 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
     localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
   };
 
-  const handleTicketClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    window.open(event.ticketUrl, '_blank', 'noopener,noreferrer');
-  };
-
   const renderPrice = () => {
     const { studentDiscount, studentPrice, price } = event;
 
@@ -169,14 +163,10 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
                   )}
 
                   <Button asChild size="sm">
-                    <a
-                      href={event.ticketUrl}
-                      onClick={handleTicketClick}
-                      className="flex items-center gap-2"
-                    >
+                    <Link href={`/events/${event.id}`} className="flex items-center gap-2">
                       <Ticket className="h-4 w-4" />
-                      <span>Tickets</span>
-                    </a>
+                      <span>Details</span>
+                    </Link>
                   </Button>
                 </div>
                 {event.boxOffice && (
