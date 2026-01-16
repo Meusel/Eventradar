@@ -249,7 +249,7 @@ export default function EventPage() {
                 <Button asChild size="lg" variant="accent" className="w-full">
                   <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer">
                     <Ticket className="mr-2 h-5 w-5" />
-                    Tickets kaufen
+                    Tickets
                   </a>
                 </Button>
                 <SocialShareButtons />
