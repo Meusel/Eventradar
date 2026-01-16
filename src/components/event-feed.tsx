@@ -119,7 +119,7 @@ export default function EventFeed({ events, categories, activeCategory, onCatego
       {filteredEvents.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredEvents.map((event, index) => (
-            <EventCard key={event.id} event={event} priority={index === 0} />
+            <EventCard key={event.id} event={event} priority={index === 0} showStudentPrice={studentDiscountOnly} />
           ))}
         </div>
       ) : (

@@ -22,9 +22,10 @@ import { useState, useEffect } from 'react';
 interface EventCardProps {
   event: Event;
   priority?: boolean;
+  showStudentPrice?: boolean;
 }
 
-export default function EventCard({ event, priority = false }: EventCardProps) {
+export default function EventCard({ event, priority = false, showStudentPrice = false }: EventCardProps) {
   const categoryColor = getCategoryColor(event.category);
   const communities = getCommunitiesByEventId(event.id);
   const [isSaved, setIsSaved] = useState(false);
@@ -53,7 +54,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
   const renderPrice = () => {
     const { studentDiscount, studentPrice, price } = event;
 
-    if (studentDiscount && typeof studentPrice === 'number') {
+    if (showStudentPrice && studentDiscount && typeof studentPrice === 'number') {
       return (
         <div className="flex items-baseline gap-2">
           <span className={`text-lg font-bold ${studentPrice === 0 ? 'text-green-500 animate-pulse' : ''}`}>
