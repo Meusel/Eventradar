@@ -80,7 +80,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
 
   return (
     <div className="group block h-full rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:shadow-lg">
-      <Link href={`/event/${event.id}`} className="block">
+      <Link href={`/events/${event.id}`} className="block">
         <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
           <Image
             src={event.imageUrl}
@@ -128,7 +128,7 @@ export default function EventCard({ event, priority = false }: EventCardProps) {
         </div>
       </Link>
       <div className="p-4 flex flex-col flex-grow">
-        <Link href={`/event/${event.id}`} className="block flex-grow">
+        <Link href={`/events/${event.id}`} className="block flex-grow">
             <h3 className="text-xl font-bold font-headline tracking-tight line-clamp-2">
                 {event.title}
             </h3>
