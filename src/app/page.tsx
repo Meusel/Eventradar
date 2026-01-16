@@ -12,7 +12,7 @@ import { getCommunities, joinCommunity } from "@/lib/communities";
 import { getCommunitySuggestions } from "@/lib/community-suggestions";
 import type { Event, User, Community } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Compass, Home as HomeIcon, MessageSquare, Search, Sparkles, Calendar, Flame } from "lucide-react";
+import { Compass, Home as HomeIcon, MessageSquare, Calendar, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriorityLegend from "@/components/priority-legend";
 import CommunitySuggestions from "@/components/community-suggestions";
@@ -28,15 +28,11 @@ const EventMap = dynamic(() => import("@/components/event-map"), {
   loading: () => <div className="text-center text-muted-foreground mt-8">Karte wird geladen...</div>
 });
 
-// Dynamically import CookieConsent
-const CookieConsent = dynamic(() => import("@/components/cookie-consent"), { ssr: false });
-
 
 export default function HomePage() {
   return (
     <Suspense fallback={<div className="text-center text-muted-foreground mt-8">Lädt...</div>}>
       <App />
-      <CookieConsent />
     </Suspense>
   )
 }
@@ -176,16 +172,6 @@ function App() {
                 Anstehende Events in <span className="text-primary">Halle</span>
               </h1>
               <PriorityLegend />
-            </div>
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Suche nach Events..."
-                className="w-full rounded-full bg-muted pl-10 pr-4 py-6 text-lg"
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
             </div>
             <CommunitySuggestions 
               communities={suggestedCommunities}
