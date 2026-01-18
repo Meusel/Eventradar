@@ -1,12 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import EventCard from '@/components/event-card';
 import { Button } from '@/components/ui/button';
 import { Calendar as CalendarIcon, List, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Event } from '@/lib/types';
 import { getEvents } from '@/lib/events';
-import { Calendar as BigCalendar, momentLocalizer, Views, ToolbarProps } from 'react-big-calendar';
+import { Calendar as BigCalendar, momentLocalizer, Views, ToolbarProps, View } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'moment/locale/de';
@@ -28,40 +28,23 @@ const viewGerman = {
   day: 'Tag',
 };
 
-const CustomToolbar = (toolbar: ToolbarProps) => {
-  const goToBack = () => {
-    toolbar.onNavigate('PREV');
-  };
-
-  const goToNext = () => {
-    toolbar.onNavigate('NEXT');
-  };
-
-  const goToCurrent = () => {
-    toolbar.onNavigate('TODAY');
-  };
-
-  const view = (view: string) => {
-    toolbar.onView(view);
-  };
-
+const CustomToolbar = ({ label, onNavigate, onView, views, view }: ToolbarProps) => {
   return (
-    <div className="flex justify-between items-center mb-4 p-2 bg-gray-100 rounded-lg">
+    <div className="flex flex-col sm:flex-row justify-between items-center mb-4 p-2 bg-card text-card-foreground rounded-lg border gap-4 sm:gap-0">
       <div className="flex items-center gap-2">
-        <Button onClick={goToCurrent} variant="outline">Heute</Button>
+        <Button onClick={() => onNavigate('TODAY')} variant="outline">Heute</Button>
       </div>
       <div className="flex items-center gap-2">
-        <Button onClick={goToBack} variant="ghost" size="icon"><ChevronLeft className="h-5 w-5" /></Button>
-        <h2 className="text-xl font-semibold capitalize">{toolbar.label}</h2>
-        <Button onClick={goToNext} variant="ghost" size="icon"><ChevronRight className="h-5 w-5" /></Button>
+        <Button onClick={() => onNavigate('PREV')} variant="ghost" size="icon"><ChevronLeft className="h-5 w-5" /></Button>
+        <h2 className="text-xl font-semibold capitalize whitespace-nowrap">{label}</h2>
+        <Button onClick={() => onNavigate('NEXT')} variant="ghost" size="icon"><ChevronRight className="h-5 w-5" /></Button>
       </div>
       <div className="flex items-center gap-2">
-        {(toolbar.views as string[]).map(viewName => (
+        {(views as string[]).map(viewName => (
           <Button
             key={viewName}
-            onClick={() => view(viewName)}
-            variant={toolbar.view === viewName ? 'default' : 'outline'}
-            className={toolbar.view === viewName ? 'bg-black text-white' : ''}
+            onClick={() => onView(viewName as View)}
+            variant={view === viewName ? 'default' : 'outline'}
           >
             {viewGerman[viewName] || viewName}
           </Button>
@@ -72,12 +55,19 @@ const CustomToolbar = (toolbar: ToolbarProps) => {
 };
 
 export default function CalendarPage() {
-  const [view, setView] = useState('list');
+  const [viewMode, setViewMode] = useState('list');
   const [favoriteEvents, setFavoriteEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const router = useRouter();
+
+  // State for BigCalendar
+  const [date, setDate] = useState(new Date());
+  const [view, setView] = useState<View>('month');
+
+  const onNavigate = useCallback((newDate) => setDate(newDate), [setDate]);
+  const onView = useCallback((newView: View) => setView(newView), [setView]);
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favoriteEvents') || '[]');
@@ -111,7 +101,7 @@ export default function CalendarPage() {
     router.push(`/events/${event.resource.id}`);
   };
 
-  const calendarEvents = favoriteEvents.map(event => ({
+  const calendarEvents = filteredEvents.map(event => ({
     title: event.title,
     start: new Date(event.time.start),
     end: new Date(event.time.end),
@@ -122,20 +112,18 @@ export default function CalendarPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Mein Kalender</h1>
+        <h1 className="text-3xl font-bold font-headline">Mein Kalender</h1>
         <div className="flex gap-2">
           <Button
-            variant={view === 'list' ? 'default' : 'outline'}
-            onClick={() => setView('list')}
-            className={view === 'list' ? 'bg-black text-white' : ''}
+            variant={viewMode === 'list' ? 'default' : 'outline'}
+            onClick={() => setViewMode('list')}
           >
             <List className="mr-2 h-4 w-4" />
             Liste
           </Button>
           <Button
-            variant={view === 'calendar' ? 'default' : 'outline'}
-            onClick={() => setView('calendar')}
-            className={view === 'calendar' ? 'bg-black text-white' : ''}
+            variant={viewMode === 'calendar' ? 'default' : 'outline'}
+            onClick={() => setViewMode('calendar')}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             Kalender
@@ -143,14 +131,14 @@ export default function CalendarPage() {
         </div>
       </div>
 
-      {view === 'list' ? (
+      {viewMode === 'list' ? (
         <div>
           <div className="mb-4">
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline">
                   <Filter className="mr-2 h-4 w-4" />
-                  Kategorien
+                  Kategorien filtern
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-56 p-2">
@@ -169,18 +157,23 @@ export default function CalendarPage() {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="grid gap-6">
+          <div className="grid gap-6 sm:grid-cols-1">
             {filteredEvents.length > 0 ? (
               filteredEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))
             ) : (
-              <p>Du hast noch keine Events zu deinem Kalender hinzugefügt oder keine Events entsprechen den ausgewählten Kategorien.</p>
+              <div className="text-center py-16 border-dashed border-2 rounded-lg">
+                <p className="text-muted-foreground mb-4">Du hast noch keine Events zu deinem Kalender hinzugefügt.</p>
+                 <Button asChild>
+                    <a href="/">Entdecke coole Events</a>
+                </Button>
+              </div>
             )}
           </div>
         </div>
       ) : (
-        <div style={{ height: '70vh' }}>
+        <div className="h-[75vh] pb-4">
           <BigCalendar
             localizer={localizer}
             events={calendarEvents}
@@ -190,6 +183,10 @@ export default function CalendarPage() {
             views={['month', 'week', 'day']}
             step={180}
             timeslots={1}
+            date={date}
+            view={view}
+            onNavigate={onNavigate}
+            onView={onView}
             components={{
               toolbar: CustomToolbar,
             }}
