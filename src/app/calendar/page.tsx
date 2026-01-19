@@ -66,7 +66,7 @@ export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>('month');
 
-  const onNavigate = useCallback((newDate) => setDate(newDate), [setDate]);
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
   const onView = useCallback((newView: View) => setView(newView), [setView]);
 
   useEffect(() => {
