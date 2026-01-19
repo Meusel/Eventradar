@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 export default function LayoutProvider({
   children,
 }: Readonly<{
-  children: React.React_node;
+  children: React.ReactNode;
 }>) {
   const [loading, setLoading] = useState(true);
 
